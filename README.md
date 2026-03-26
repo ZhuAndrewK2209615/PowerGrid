@@ -1,5 +1,5 @@
 # PowerGrid
-⚡Power Grid (Java Recreation)
+⚡Power Grid (Java Recreation)  
 A digital, fully playable recreation of Power Grid featuring a functional resource market, cities map, auction system, bureaucracy, and scoring system
 
 🛠️Developers
@@ -8,8 +8,8 @@ A digital, fully playable recreation of Power Grid featuring a functional resour
 - Rishi Khare
 - Daniel Fan
 
---------------------------------------------------------Useful Git Bash Commands-----------------------------------------------
-It is necessary to download the Git Bash terminal to execute these commands. Learning to use these commands will make it significantly easier to transfer code to Github and to stay organized.
+--------------------------------------------------------Useful Git Bash Commands---------------------------------------------
+It is necessary to download the Git Bash terminal to execute these commands. Learning to use these commands will make it significantly easier to transfer code between your device and Github.
 
 ⏺️Cloning The Repository
 - Create an empty new folder and enter it in VS code
@@ -20,7 +20,7 @@ It is necessary to download the Git Bash terminal to execute these commands. Lea
 - Make sure the terminal is in the PowerGrid directory. If it isn't, try typing "cd PowerGrid" into the terminal
 - Type "git add ." in the terminal
 - Type "git commit -m "[message]" in the terminal. In the parameter [message], type a brief description of your changes
-- Type "git push origin [branch-name]" in the termina. In the parameter [branch-name], type the name of the github branch you're currently working in
+- Type "git push origin [branch-name]" in the terminal. In the parameter [branch-name], type the name of the github branch you're currently working in
 - All your code will then be transferred to the Github repository in the branch you were working in
 
 ⬅️Pulling Changes from Github

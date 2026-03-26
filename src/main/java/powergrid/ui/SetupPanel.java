@@ -1,5 +1,6 @@
 package powergrid.ui;
+import javax.swing.*;
 
-public class SetupPanel {
+public class SetupPanel extends JPanel{
     
 }
