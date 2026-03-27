@@ -30,7 +30,7 @@ public class GameState {
         roundManager = new RoundManager();
 
         //Initialize other variables
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         currentRound = 1;
         currentPhase = 1;
         step = 1;

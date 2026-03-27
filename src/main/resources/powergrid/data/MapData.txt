@@ -26,3 +26,17 @@ Erfurt Yellow Hannover 19 Halle 6 Dresden 19 Nurnberg 21 Fulda 13 Kassel 15
 Fulda Yellow Kassel 8 Erfurt 13 Wurzburg 11 Frankfurt-M 8
 Wurzburg Yellow Fulda 11 Nurnberg 8 Augsburg 19 Stuttgart 12 Mannheim 10 Frankfurt-M 13
 Nurnberg Yellow Erfurt 21 Regensburg 12 Augsburg 18 Wurzburg 8
+Koln Blue Dortmund 10 Wiesbaden 21 Trier 20 Aachen 7 Dusseldorf 4
+Aachen Blue Dusseldorf 9 Koln 7 Trier 19
+Trier Blue Aachen 19 Koln 20 Wiesbaden 18 Saarbrucken 11
+Saarbrucken Blue Trier 11 Wiesbaden 10 Mannheim 11 Stuttgart 17
+Wiesbaden Blue Frankfurt-M 0 Mannheim 11 Saarbrucken 10 Trier 18 Koln 21
+Frankfurt-M Blue Dortmund 20 Kassel 13 Fulda 8 Wurzburg 13 Wiesbaden 0
+Mannheim Blue Wiesbaden 11 Wurzburg 10 Stuttgart 6 Saarbrucken 11
+Stuttgart Purple Mannheim 6 Wurzburg 12 Augsburg 15 Konstanz 16 Freiburg 16 Saarbrucken 17
+Freiburg Purple Stuttgart 16 Konstanz 14
+Konstanz Purple Freiburg 14 Stuttgart 16 Augsburg 17
+Augsburg Purple Konstanz 17 Stuttgart 15 Wurzburg 19 Nurnberg 18 Regensburg 13 Munchen 6
+Regensburg Purple Nurnberg 12 Augsburg 13 Munchen 10 Passau 12
+Munchen Purple Augsburg 6 Regensburg 10 Passau 14
+Passau Purple Regensburg 12 Munchen 14
