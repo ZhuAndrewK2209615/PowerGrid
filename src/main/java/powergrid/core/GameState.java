@@ -1,7 +1,6 @@
 package powergrid.core;
 import java.util.*;
 import powergrid.managers.*;
-import java.io.*;
 
 public class GameState {
     //Manager instances
@@ -57,6 +56,7 @@ public class GameState {
         refillScanner.close();
         
         //Load data into MapGraph and Deck (will be added once these classes are implemented)
+        mapGraph.initializeMap();
     }
 
     public static void initializePlayers(int amount) //Use after number of players is chosen and game has started

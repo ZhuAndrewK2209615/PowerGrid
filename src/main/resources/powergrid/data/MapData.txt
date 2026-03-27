@@ -1,0 +1,28 @@
+Flensburg Teal Kiel 4
+Kiel Teal Flensburg 4 Lubeck 4 Hamburg 8
+Hamburg Teal Kiel 8 Lubeck 6 Schwerin 8 Hannover 17 Bremen 11 Cuxhaven 11
+Cuxhaven Teal Hamburg 11 Bremen 8
+Wilhelmshaven Teal Bremen 11 Osnabruck 14
+Bremen Teal Hamburg 11 Hannover 10 Osnabruck 11 Wilhelmshaven 11 Cuxhaven 8
+Hannover Teal Hamburg 17 Schwerin 19 Magdeburg 15 Erfurt 19 Kassel 15 Osnabruck 16 Bremen 10
+Lubeck Brown Kiel 4 Hamburg 6 Schwerin 6
+Rostock Brown Schwerin 6 Torgelow 19
+Schwerin Brown Lubeck 6 Rostock 6 Torgelow 19 Berlin 18 Magdeburg 16 Hannover 19 Hamburg 8
+Torgelow Brown Rostock 19 Schwerin 19 Berlin 15
+Magdeburg Brown Schwerin 16 Berlin 10 Halle 11 Hannover 15
+Berlin Brown Schwerin 18 Torgelow 15 Frankfurt-D 6 Halle 17 Magdeburg 10
+Frankfurt-D Brown Berlin 6 Leipzig 21 Dresden 16
+Osnabruck Red Wilhelmshaven 14 Bremen 11 Hannover 16 Kassel 20 Munster 7
+Munster Red Osnabruck 7 Dortmund 2 Essen 6
+Duisburg Red Essen 0
+Essen Red Duisburg 0 Munster 6 Dortmund 4 Dusseldorf 2
+Dortmund Red Munster 2 Kassel 18 Frankfurt-M 20 Koln 10 Essen 4
+Dusseldorf Red Essen 2 Koln 4 Aachen 9
+Kassel Red Hannover 15 Erfurt 15 Fulda 8 Frankfurt-M 13 Dortmund 18 Osnabruck 20
+Halle Yellow Magdeburg 11 Berlin 17 Leipzig 0 Erfurt 6
+Leipzig Yellow Halle 0 Frankfurt-D 21 Dresden 13
+Dresden Yellow Frankfurt-D 16 Leipzig 13 Erfurt 19
+Erfurt Yellow Hannover 19 Halle 6 Dresden 19 Nurnberg 21 Fulda 13 Kassel 15
+Fulda Yellow Kassel 8 Erfurt 13 Wurzburg 11 Frankfurt-M 8
+Wurzburg Yellow Fulda 11 Nurnberg 8 Augsburg 19 Stuttgart 12 Mannheim 10 Frankfurt-M 13
+Nurnberg Yellow Erfurt 21 Regensburg 12 Augsburg 18 Wurzburg 8
