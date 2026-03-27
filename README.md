@@ -8,7 +8,7 @@ A digital, fully playable recreation of Power Grid featuring a functional resour
 - Rishi Khare
 - Daniel Fan
 
---------------------------------------------------------Useful Git Bash Commands---------------------------------------------
+--------------------------------------------------------Useful Git Bash Commands---------------------------------------------  
 It is necessary to download the Git Bash terminal to execute these commands. Learning to use these commands will make it significantly easier to transfer code between your device and Github.
 
 ⏺️Cloning The Repository
