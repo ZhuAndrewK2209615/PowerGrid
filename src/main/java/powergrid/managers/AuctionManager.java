@@ -2,6 +2,10 @@ package powergrid.managers;
 import java.util.ArrayList;
 import powergrid.core.Player;
 import powergrid.utils.PowerPlant;
+import powergrid.*;
+import powergrid.managers.MarketManager;
+
+// all methods are public, no helper methods used specific to this class
 
 public class AuctionManager {
     private PowerPlant currentPlant;
@@ -16,7 +20,7 @@ public class AuctionManager {
       highestBidder = null;
       activePlayers = new ArrayList<>();
     }
-    private void startAuction(PowerPlant P){
+    public void startAuction(PowerPlant P){
       currentPlant = P;
       currentBid = P.getPlantNumber(); // setting currentBid to the lowest cost or number on plant card 
       highestBidder = null;
@@ -24,10 +28,10 @@ public class AuctionManager {
       // will have to update or place in the players into the arraylist
     }
 
-    private boolean placeBid(Player P, int amount){
-      if(activePlayers.contains(P)){   // player exists
+    public boolean placeBid(Player P, int amount){
+      if(activePlayers.contains(P)){
         if(amount > currentBid){
-          currentBid = amount;  // his new bid will be higher and so will become the curentBid
+          currentBid = amount;
           highestBidder = P;
           return true;
         }
@@ -35,49 +39,40 @@ public class AuctionManager {
       return false;
     }
 
-    private void passBid(Player P){
-      activePlayers.remove(P);  // we remove player from activePlayers
+    public void passBid(Player P){
+      activePlayers.remove(P);
       //discardedPlayers.add(P);
     }
 
-    private Player resolveAuction(){
+    public boolean resolveAuction(){  // only one person can exist at this stage
+      // either all players have passed or won an auction in the game effectively removing them from 
+      // the arraylist of activePlayers
 
       if(activePlayers.size() == 1 && highestBidder == null){
         highestBidder = activePlayers.get(0);
-        currentBid = currentPlant.getPlantNumber();
-        return highestBidder; // if there is only one player, they will be on index 0 
-        // and will by default win
-      }
-
-      if(highestBidder != null && currentPlant != null){  // if multiple people remain
-        highestBidder.addPowerPlant(currentPlant); // award highestBidder the current plant
         highestBidder.spendElektro(currentBid);
+        highestBidder.addPowerPlant(currentPlant);
         MarketManager.removePlant(currentPlant);
-        currentPlant = null;
-        Player toReturn = highestBidder;
-        highestBidder = null;
-        currentBid = 0;
-        activePlayers = new ArrayList<>();
-        return toReturn;
+        currentBid = currentPlant.getPlantNumber();
+        return true;
       }
-      return null;
+      return false;
     }
 
-    private int getCurrentBid(){
+    public int getCurrentBid(){
       return currentBid;
     }
     
-    private PowerPlant getCurrentPlant(){
+    public PowerPlant getCurrentPlant(){
       return currentPlant;
     }
 
-    private Player getHighestBidder(){
+    public Player getHighestBidder(){
       return highestBidder;
     }
 
-    private ArrayList<Player> getActiveBidders(){
+    public ArrayList<Player> getActiveBidders(){
       return activePlayers;
     }
 
 }
-
