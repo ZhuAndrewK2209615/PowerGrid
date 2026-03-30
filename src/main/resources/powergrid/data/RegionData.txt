@@ -1,0 +1,6 @@
+Teal Red Yellow Brown
+Brown Teal Yellow
+Red Teal Yellow Blue
+Yellow Brown Teal Red Blue Purple
+Blue Red Yellow Purple
+Purple Blue Yellow

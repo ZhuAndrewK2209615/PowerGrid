@@ -6,6 +6,7 @@ public class City {
     private String name;
     private String region;
     private ArrayList<Player> owners;
+    private boolean visited;
 
     public City(String name, String region)
     {
@@ -41,6 +42,16 @@ public class City {
 
     public String toString()
     {
-        return name + " owned by " + owners;
+        return name;
+    }
+
+    public boolean wasVisited()
+    {
+        return visited;
+    }
+
+    public void toggleVisited()
+    {
+        visited = !visited;
     }
 }
