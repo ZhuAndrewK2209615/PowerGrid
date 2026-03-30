@@ -42,7 +42,7 @@ public class City {
 
     public String toString()
     {
-        return name + " owned by " + owners;
+        return name;
     }
 
     public boolean wasVisited()
