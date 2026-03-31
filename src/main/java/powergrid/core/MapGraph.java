@@ -60,7 +60,7 @@ public class MapGraph {
         {
             String[] data = mapScanner2.nextLine().split(" ");
             City originCity = locator.get(data[0]);
-            for(int i=2; i<data.length; i+=2)
+            for(int i=2; i<data.length-2; i+=2)
             {
                 Connection connectedCity = new Connection(originCity, locator.get(data[i]), Integer.parseInt(data[i + 1]));
                 mapGraph.get(originCity).add(connectedCity);
