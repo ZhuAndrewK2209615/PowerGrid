@@ -7,11 +7,15 @@ public class City {
     private String region;
     private ArrayList<Player> owners;
     private boolean visited;
+    private int x;
+    private int y;
 
-    public City(String name, String region)
+    public City(String name, String region, int x, int y)
     {
         this.name = name;
         this.region = region;
+        this.x = x;
+        this.y = y;
         owners = new ArrayList<>();
     }
 
@@ -53,5 +57,15 @@ public class City {
     public void toggleVisited()
     {
         visited = !visited;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
     }
 }

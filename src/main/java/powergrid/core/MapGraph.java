@@ -7,6 +7,7 @@ public class MapGraph {
     private HashMap<String, ArrayList<String>> adjacentRegions;
     private ArrayList<String> mapRegions;
     private boolean found; //used for path construction algorithm
+    private final int CITY_RADIUS = 5; //will change later if necessary
 
     public MapGraph()
     {
@@ -48,7 +49,7 @@ public class MapGraph {
         while (mapScanner.hasNextLine())
         {
             String[] data = mapScanner.nextLine().split(" ");
-            City newCity = new City(data[0], data[1]);
+            City newCity = new City(data[0], data[1], Integer.parseInt(data[data.length - 2]), Integer.parseInt(data[data.length - 1]));
             mapGraph.put(newCity, new ArrayList<Connection>());
             locator.put(data[0], newCity);
         }
@@ -67,6 +68,18 @@ public class MapGraph {
         }
         mapScanner2.close();
         System.out.println("MapGraph successfully initialized");
+    }
+
+    public City getCity(int x, int y) // returns the city that the player clicked on, null if a city wasn't clicked on
+    {
+        for(City c: mapGraph.keySet())
+        {
+            if (Math.abs(x - c.getX()) <= CITY_RADIUS && Math.abs(y - c.getY()) <= CITY_RADIUS)
+            {
+                return c;
+            }
+        }
+        return null;
     }
 
     public boolean addRegion(String regionAdded) //Use this method during map selection, when each player chooses a region
