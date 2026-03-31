@@ -1,42 +1,42 @@
-Flensburg Teal Kiel 4
-Kiel Teal Flensburg 4 Lubeck 4 Hamburg 8
-Hamburg Teal Kiel 8 Lubeck 6 Schwerin 8 Hannover 17 Bremen 11 Cuxhaven 11
-Cuxhaven Teal Hamburg 11 Bremen 8
-Wilhelmshaven Teal Bremen 11 Osnabruck 14
-Bremen Teal Hamburg 11 Hannover 10 Osnabruck 11 Wilhelmshaven 11 Cuxhaven 8
-Hannover Teal Hamburg 17 Schwerin 19 Magdeburg 15 Erfurt 19 Kassel 15 Osnabruck 16 Bremen 10
-Lubeck Brown Kiel 4 Hamburg 6 Schwerin 6
-Rostock Brown Schwerin 6 Torgelow 19
-Schwerin Brown Lubeck 6 Rostock 6 Torgelow 19 Berlin 18 Magdeburg 16 Hannover 19 Hamburg 8
-Torgelow Brown Rostock 19 Schwerin 19 Berlin 15
-Magdeburg Brown Schwerin 16 Berlin 10 Halle 11 Hannover 15
-Berlin Brown Schwerin 18 Torgelow 15 Frankfurt-D 6 Halle 17 Magdeburg 10
-Frankfurt-D Brown Berlin 6 Leipzig 21 Dresden 16
-Osnabruck Red Wilhelmshaven 14 Bremen 11 Hannover 16 Kassel 20 Munster 7
-Munster Red Osnabruck 7 Dortmund 2 Essen 6
-Duisburg Red Essen 0
-Essen Red Duisburg 0 Munster 6 Dortmund 4 Dusseldorf 2
-Dortmund Red Munster 2 Kassel 18 Frankfurt-M 20 Koln 10 Essen 4
-Dusseldorf Red Essen 2 Koln 4 Aachen 9
-Kassel Red Hannover 15 Erfurt 15 Fulda 8 Frankfurt-M 13 Dortmund 18 Osnabruck 20
-Halle Yellow Magdeburg 11 Berlin 17 Leipzig 0 Erfurt 6
-Leipzig Yellow Halle 0 Frankfurt-D 21 Dresden 13
-Dresden Yellow Frankfurt-D 16 Leipzig 13 Erfurt 19
-Erfurt Yellow Hannover 19 Halle 6 Dresden 19 Nurnberg 21 Fulda 13 Kassel 15
-Fulda Yellow Kassel 8 Erfurt 13 Wurzburg 11 Frankfurt-M 8
-Wurzburg Yellow Fulda 11 Nurnberg 8 Augsburg 19 Stuttgart 12 Mannheim 10 Frankfurt-M 13
-Nurnberg Yellow Erfurt 21 Regensburg 12 Augsburg 18 Wurzburg 8
-Koln Blue Dortmund 10 Wiesbaden 21 Trier 20 Aachen 7 Dusseldorf 4
-Aachen Blue Dusseldorf 9 Koln 7 Trier 19
-Trier Blue Aachen 19 Koln 20 Wiesbaden 18 Saarbrucken 11
-Saarbrucken Blue Trier 11 Wiesbaden 10 Mannheim 11 Stuttgart 17
-Wiesbaden Blue Frankfurt-M 0 Mannheim 11 Saarbrucken 10 Trier 18 Koln 21
-Frankfurt-M Blue Dortmund 20 Kassel 13 Fulda 8 Wurzburg 13 Wiesbaden 0
-Mannheim Blue Wiesbaden 11 Wurzburg 10 Stuttgart 6 Saarbrucken 11
-Stuttgart Purple Mannheim 6 Wurzburg 12 Augsburg 15 Konstanz 16 Freiburg 16 Saarbrucken 17
-Freiburg Purple Stuttgart 16 Konstanz 14
-Konstanz Purple Freiburg 14 Stuttgart 16 Augsburg 17
-Augsburg Purple Konstanz 17 Stuttgart 15 Wurzburg 19 Nurnberg 18 Regensburg 13 Munchen 6
-Regensburg Purple Nurnberg 12 Augsburg 13 Munchen 10 Passau 12
-Munchen Purple Augsburg 6 Regensburg 10 Passau 14
-Passau Purple Regensburg 12 Munchen 14
+Flensburg Teal Kiel 4 321 42
+Kiel Teal Flensburg 4 Lubeck 4 Hamburg 8 364 110
+Hamburg Teal Kiel 8 Lubeck 6 Schwerin 8 Hannover 17 Bremen 11 Cuxhaven 11 360 216
+Cuxhaven Teal Hamburg 11 Bremen 8 266 173
+Wilhelmshaven Teal Bremen 11 Osnabruck 14 212 214
+Bremen Teal Hamburg 11 Hannover 10 Osnabruck 11 Wilhelmshaven 11 Cuxhaven 8 282 279
+Hannover Teal Hamburg 17 Schwerin 19 Magdeburg 15 Erfurt 19 Kassel 15 Osnabruck 16 Bremen 10 362 378
+Lubeck Brown Kiel 4 Hamburg 6 Schwerin 6 426 156
+Rostock Brown Schwerin 6 Torgelow 19 528 130
+Schwerin Brown Lubeck 6 Rostock 6 Torgelow 19 Berlin 18 Magdeburg 16 Hannover 19 Hamburg 8 480 219
+Torgelow Brown Rostock 19 Schwerin 19 Berlin 15 682 211
+Magdeburg Brown Schwerin 16 Berlin 10 Halle 11 Hannover 15 512 388
+Berlin Brown Schwerin 18 Torgelow 15 Frankfurt-D 6 Halle 17 Magdeburg 10 633 355
+Frankfurt-D Brown Berlin 6 Leipzig 21 Dresden 16 717 378
+Osnabruck Red Wilhelmshaven 14 Bremen 11 Hannover 16 Kassel 20 Munster 7 219 363
+Munster Red Osnabruck 7 Dortmund 2 Essen 6 173 429
+Duisburg Red Essen 0 62 457
+Essen Red Duisburg 0 Munster 6 Dortmund 4 Dusseldorf 2 113 477
+Dortmund Red Munster 2 Kassel 18 Frankfurt-M 20 Koln 10 Essen 4 188 506
+Dusseldorf Red Essen 2 Koln 4 Aachen 9 76 537
+Kassel Red Hannover 15 Erfurt 15 Fulda 8 Frankfurt-M 13 Dortmund 18 Osnabruck 20 324 522
+Halle Yellow Magdeburg 11 Berlin 17 Leipzig 0 Erfurt 6 527 490
+Leipzig Yellow Halle 0 Frankfurt-D 21 Dresden 13 571 520
+Dresden Yellow Frankfurt-D 16 Leipzig 13 Erfurt 19 688 564
+Erfurt Yellow Hannover 19 Halle 6 Dresden 19 Nurnberg 21 Fulda 13 Kassel 15 469 562
+Fulda Yellow Kassel 8 Erfurt 13 Wurzburg 11 Frankfurt-M 8 364 623
+Wurzburg Yellow Fulda 11 Nurnberg 8 Augsburg 19 Stuttgart 12 Mannheim 10 Frankfurt-M 13 379 728
+Nurnberg Yellow Erfurt 21 Regensburg 12 Augsburg 18 Wurzburg 8 471 772
+Koln Blue Dortmund 10 Wiesbaden 21 Trier 20 Aachen 7 Dusseldorf 4 133 589
+Aachen Blue Dusseldorf 9 Koln 7 Trier 19 50 612
+Trier Blue Aachen 19 Koln 20 Wiesbaden 18 Saarbrucken 11 85 736
+Saarbrucken Blue Trier 11 Wiesbaden 10 Mannheim 11 Stuttgart 17 156 816
+Wiesbaden Blue Frankfurt-M 0 Mannheim 11 Saarbrucken 10 Trier 18 Koln 21 224 693
+Frankfurt-M Blue Dortmund 20 Kassel 13 Fulda 8 Wurzburg 13 Wiesbaden 0 275 668
+Mannheim Blue Wiesbaden 11 Wurzburg 10 Stuttgart 6 Saarbrucken 11 267 791
+Stuttgart Purple Mannheim 6 Wurzburg 12 Augsburg 15 Konstanz 16 Freiburg 16 Saarbrucken 17 293 879
+Freiburg Purple Stuttgart 16 Konstanz 14 196 968
+Konstanz Purple Freiburg 14 Stuttgart 16 Augsburg 17 292 1012
+Augsburg Purple Konstanz 17 Stuttgart 15 Wurzburg 19 Nurnberg 18 Regensburg 13 Munchen 6 430 907
+Regensburg Purple Nurnberg 12 Augsburg 13 Munchen 10 Passau 12 537 837
+Munchen Purple Augsburg 6 Regensburg 10 Passau 14 513 963
+Passau Purple Regensburg 12 Munchen 14 664 894
