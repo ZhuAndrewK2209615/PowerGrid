@@ -176,20 +176,20 @@ public class Player implements Comparable<Player> {
         }
 
         if (this.ownedCities.size() > other.ownedCities.size()) {
-            return -1;
+            return 1;
         }
         if (this.ownedCities.size() < other.ownedCities.size()) {
-            return 1;
+            return -1;
         }
 
         int thisHighest = (highestPowerPlant == null) ? -1 : highestPowerPlant.getPlantNumber();
         int otherHighest = (other.highestPowerPlant == null) ? -1 : other.highestPowerPlant.getPlantNumber();
 
         if (thisHighest > otherHighest) {
-            return -1;
+            return 1;
         }
         if (thisHighest < otherHighest) {
-            return 1;
+            return -1;
         }
 
         return 0;
