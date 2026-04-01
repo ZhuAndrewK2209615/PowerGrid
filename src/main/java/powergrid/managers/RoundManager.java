@@ -1,35 +1,39 @@
 package powergrid.managers;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import powergrid.core.GameState;
 import powergrid.core.Player;
-public class RoundManager {
-    private int Phases=1;
-    private static String currentPhase="Auction";
-    private static int Round=1;
-    private static ArrayList<Player> playerOrder = new ArrayList<>();
-}
-public static void determinePlayerOrder(){
-playerOrder = GameState.getPlayers();
-  Collections.sort(playerOrder);
-} 
-public ArrayList<Player> getPlayerOrder(){
-return playerOrder;
-}
-public static int advancePhase(int CurrentPhase) 
-    {
-if(CurrentPhase<4){
-CurrentPhase=CurrentPhase+1;
-}
-else{
-CurrentPhase=1;
-}
 
-return CurrentPhase;
-}
-public static int advanceRound(int CurrentRound){
-        CurrentRound=CurrentRound+1;
-        return CurrentRound;
-}
+public class RoundManager {
+    private int phase = 1;
+    private int round = 1;
+    private ArrayList<Player> playerOrder = new ArrayList<>();
+
+    public void determinePlayerOrder() {
+        for(Player p: GameState.players)
+        {
+            playerOrder.add(p);
+        }
+        Collections.sort(playerOrder);
+    } 
+
+    public ArrayList<Player> getPlayerOrder() {
+        return playerOrder;
+    }
+
+    public int advancePhase()
+    {
+        if (phase<4) {
+            phase=phase+1;
+        }
+        else {
+        phase =1;
+        }
+        return phase;
+    }
+
+    public int advanceRound(){
+        round++;
+        return round;
+    }
 }

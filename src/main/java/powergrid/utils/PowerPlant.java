@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.imageio.*;
 
-public class PowerPlant implements Comparable{
+public class PowerPlant implements Comparable<PowerPlant>{
     private int plantNumber;
     private ResourceType fuelType;
     private int resourceCost;
@@ -25,7 +25,7 @@ public class PowerPlant implements Comparable{
         }
         catch (Exception e)
         {
-            System.out.println("A PowerPlant image failed to load");
+            System.out.println("A PowerPlant image failed to load, plantNumber is " + plantNumber);
         }
     }
 
@@ -73,8 +73,8 @@ public class PowerPlant implements Comparable{
     }
 
     @Override
-    public int compareTo(Object o) {
-        PowerPlant other = (PowerPlant)o;
+    public int compareTo(PowerPlant o) {
+        PowerPlant other = o;
         if (this.getPlantNumber() > other.getPlantNumber())
         {
             return 1;
@@ -89,6 +89,12 @@ public class PowerPlant implements Comparable{
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return "Power Plant " + plantNumber;
+    }
+
     public int getCitiesPowered()
     {
         return citiesPowered;
@@ -97,5 +103,10 @@ public class PowerPlant implements Comparable{
     public boolean canPower()
     {
         return resourcesStored.size() >= resourceCost;
+    }
+    
+    public BufferedImage getImage()
+    {
+        return image;
     }
 }
