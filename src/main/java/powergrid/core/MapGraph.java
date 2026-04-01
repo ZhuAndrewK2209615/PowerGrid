@@ -7,7 +7,7 @@ public class MapGraph {
     private HashMap<String, ArrayList<String>> adjacentRegions;
     private ArrayList<String> mapRegions;
     private boolean found; //used for path construction algorithm
-    private final int CITY_RADIUS = 5; //will change later if necessary
+    private final int CITY_RADIUS = 25; //will change later if necessary
 
     public MapGraph()
     {
