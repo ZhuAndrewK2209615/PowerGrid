@@ -88,4 +88,14 @@ public class PowerPlant implements Comparable{
             return 0;
         }
     }
+
+    public int getCitiesPowered()
+    {
+        return citiesPowered;
+    }
+
+    public boolean canPower()
+    {
+        return resourcesStored.size() >= resourceCost;
+    }
 }
