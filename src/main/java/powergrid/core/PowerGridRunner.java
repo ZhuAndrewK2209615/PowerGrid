@@ -1,8 +1,7 @@
 package powergrid.core;
-import powergrid.utils.*;
-import powergrid.*;
-import java.io.*;
 import java.awt.Color;
+import java.io.*;
+import powergrid.*;
 
 public class PowerGridRunner {
     public static void main(String[]args) throws IOException
@@ -21,6 +20,7 @@ public class PowerGridRunner {
         GameState.players.get(2).addCity(GameState.mapGraph.getCity("Dusseldorf"));
         GameState.activePlayer.addCity(GameState.mapGraph.getCity("Dusseldorf"));
         GameState.mapGraph.getCity("Dusseldorf").addOwner(GameState.activePlayer);
+        GameState.roundManager.determinePlayerOrder();
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         PowerGridFrame game = new PowerGridFrame("Power Grid");

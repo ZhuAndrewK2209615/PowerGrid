@@ -1,15 +1,16 @@
 package powergrid.ui;
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import javax.imageio.*;
-import powergrid.utils.*;
-import powergrid.core.*;
 import java.util.List;
+import javax.imageio.*;
+import javax.swing.*;
+import powergrid.core.*;
+import powergrid.utils.*;
 
 public class MapPanel extends JPanel implements MouseListener{
     private BufferedImage mapImage;
+    private BufferedImage marketImage;
     private City selectedCity;
     private Path shortestPath;
     private final int HOUSE_SIZE = 12;
@@ -19,6 +20,7 @@ public class MapPanel extends JPanel implements MouseListener{
         try
         {
             mapImage = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/Germany Map.jpeg"));
+            marketImage = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/market.png"));
         }
         catch (Exception e)
         {
@@ -36,6 +38,7 @@ public class MapPanel extends JPanel implements MouseListener{
         {
             drawPath(g2d);
         }
+        drawMarket(g2d);
     }
 
     public void drawMap(Graphics2D g2d)
@@ -73,6 +76,22 @@ public class MapPanel extends JPanel implements MouseListener{
                 drawHouse(g2d, c.getX() + xOffset, c.getY() + yOffset);
             }
         }
+
+        //draw houses in turn order
+        int x = 63;
+        int y = 40;
+        for(Player p: GameState.roundManager.getPlayerOrder())
+        {
+            g2d.setColor(p.getColor());
+            drawHouse(g2d, x, y);
+            x += 30;
+        }
+    }
+
+    public void drawMarket(Graphics2D g2d)
+    {
+        g2d.drawImage(marketImage, getWidth() / 2 - 148, 0, 100, getHeight(), null);
+        
     }
 
     public void drawHouse(Graphics2D g2d, int x, int y)
