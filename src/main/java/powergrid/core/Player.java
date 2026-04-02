@@ -5,16 +5,18 @@ import java.util.HashMap;
 import powergrid.utils.City;
 import powergrid.utils.PowerPlant;
 import powergrid.utils.ResourceType;
+import java.awt.Color;
 
 public class Player implements Comparable<Player> {
     private String name;
     private int elektro;
     private ArrayList<PowerPlant> ownedPlants;
-    private ArrayList<City> ownedCities;
+    private HashMap<City, Integer> ownedCities;
     private HashMap<ResourceType, Integer> resources;
     private int citiesPowered;
     private PowerPlant highestPowerPlant;
     private boolean passedBid;
+    private Color color;
 
     public Player() {
         this("Player");
@@ -22,9 +24,10 @@ public class Player implements Comparable<Player> {
 
     public Player(String name) {
         this.name = name;
+        this.color = Color.BLACK;
         this.elektro = 50;
         this.ownedPlants = new ArrayList<>();
-        this.ownedCities = new ArrayList<>();
+        this.ownedCities = new HashMap<>();
         this.resources = new HashMap<>();
         this.citiesPowered = 0;
         this.highestPowerPlant = null;
@@ -35,6 +38,16 @@ public class Player implements Comparable<Player> {
         resources.put(ResourceType.GARBAGE, 0);
         resources.put(ResourceType.URANIUM, 0);
         resources.put(ResourceType.HYBRID, 0);
+    }
+
+    public void setColor(Color color)
+    {
+        this.color = color;
+    }
+
+    public Color getColor()
+    {
+        return color;
     }
 
     public String getName() {
@@ -53,7 +66,7 @@ public class Player implements Comparable<Player> {
         return ownedPlants;
     }
 
-    public ArrayList<City> getCitiesBuilt() {
+    public HashMap<City, Integer> getCitiesBuilt() {
         return ownedCities;
     }
 
@@ -98,8 +111,8 @@ public class Player implements Comparable<Player> {
             return;
         }
 
-        if (!ownedCities.contains(c)) {
-            ownedCities.add(c);
+        if (!ownedCities.containsKey(c)) {
+            ownedCities.put(c, c.getOwners().size() + 1);
 
             if (!c.getOwners().contains(this)) {
                 c.addOwner(this);

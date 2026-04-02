@@ -6,6 +6,7 @@ public class MapGraph {
     private HashMap<City, ArrayList<Connection>> mapGraph;
     private HashMap<String, ArrayList<String>> adjacentRegions;
     private ArrayList<String> mapRegions;
+    private ArrayList<City> allCities;
     private boolean found; //used for path construction algorithm
     private final int CITY_RADIUS = 25; //will change later if necessary
 
@@ -15,6 +16,7 @@ public class MapGraph {
         mapGraph = new HashMap<>();
         mapRegions = new ArrayList<>();
         adjacentRegions = new HashMap<>();
+        allCities = new ArrayList<>();
         found = false;
 
         //initialize regions adjacency list
@@ -41,6 +43,16 @@ public class MapGraph {
         return null;
     }
 
+    public ArrayList<City> getAllCities()
+    {
+        return allCities;
+    }
+
+    public boolean cityInMap(City c)
+    {
+        return mapGraph.containsKey(c);
+    }
+
     public void initializeMap()
     {
         //initialize all city objects
@@ -51,6 +63,7 @@ public class MapGraph {
             String[] data = mapScanner.nextLine().split(" ");
             City newCity = new City(data[0], data[1], Integer.parseInt(data[data.length - 2]), Integer.parseInt(data[data.length - 1]));
             mapGraph.put(newCity, new ArrayList<Connection>());
+            allCities.add(newCity);
             locator.put(data[0], newCity);
         }
         mapScanner.close();
@@ -134,12 +147,11 @@ public class MapGraph {
         {
             mapGraph.remove(c);
         }
-        System.out.println(mapGraph);
     }
 
     public boolean validBuild(Player p, City destination) //Use when the player clicks on a city to build; returns true if it is legal for them to build there
     {
-        if (!p.getCitiesBuilt().contains(destination) && destination.getOwners().size() < GameState.step)
+        if (!p.getCitiesBuilt().keySet().contains(destination) && destination.getOwners().size() < GameState.step)
         {
             return true;
         }
@@ -158,7 +170,7 @@ public class MapGraph {
         //initialization
         int shortestDistance = 999999999;
         HashMap<City, Integer> smallestCosts = new HashMap<>();
-        ArrayList<City> ownedCities = p.getCitiesBuilt();
+        Set<City> ownedCities = p.getCitiesBuilt().keySet();
         List<City> cityPath = new ArrayList<>();
 
         //Dijkstra's algorithm performed on every city
@@ -210,8 +222,16 @@ public class MapGraph {
             if (shortestDistance < previousShortest) //if shorter distance was found, re-construct shortest path
             {
                 cityPath.clear();
+                found = false;
                 constructPath(cityPath, destination, c, 0, shortestDistance);
                 cityPath = cityPath.reversed();
+            }
+        }
+        for(City c: mapGraph.keySet())
+        {
+            if (c.wasVisited())
+            {
+                c.toggleVisited();
             }
         }
         return new Path(shortestDistance + 10 + destination.getOwners().size() * 5, cityPath);
