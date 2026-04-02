@@ -72,6 +72,13 @@ public class marketPanel extends JPanel implements MouseInputListener{
 
         g2d.setStroke(new BasicStroke(7));  // powerplant section --> not finished
         g.drawRect(920, 220, 950, 300);
+        g2d.setStroke(new BasicStroke(5));
+        g.drawRect(930, 230, 290, 275);  // powerplant section 1
+        g.drawRect(1245, 230, 290, 275);  // powerplant section 2
+        g.drawRect(1560, 230, 290, 275);  // powerplant section 3
+
+        
+          
 
         g2d.setStroke(new BasicStroke(5));
         g.drawRect(920,530, 470, 200);  // coal
@@ -81,6 +88,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
 
         g.drawRect(920+360, 960, 200, 70);
         
+        // placeHolder for powerplants
 
 
     }
