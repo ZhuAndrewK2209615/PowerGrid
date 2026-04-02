@@ -16,13 +16,14 @@ import javax.swing.*;
 
 public class marketPanel extends JPanel implements MouseInputListener{
 
-    private BufferedImage GermanMap, market, playerPlant, coal, garbage, oil, uranium, rulesSymbol, currentAuction, rightArrow;
+    private BufferedImage GermanMap, market, playerPlant, coal, garbage, oil, uranium, rulesSymbol, currentAuction, rightArrow, leftArrow;
 
     public marketPanel(){
         try {
             GermanMap = ImageIO.read(getClass().getResource("/powergrid/Images/Germany Map.jpeg"));
             market = ImageIO.read(getClass().getResource("/powergrid/Images/market.png"));
-            rightArrow = ImageIO.read(getClass().getResource("/powergrid/Images/right-arrow.png")
+            rightArrow = ImageIO.read(getClass().getResource("/powergrid/Images/right-arrow.png"));
+            leftArrow = ImageIO.read(getClass().getResource("/powergrid/Images/left-arrow.png"));
             // will code player plant
            // coal = ImageIO.read(getClass().getResource("powergrid/Images/coal.png"));
            // garbage = ImageIO.read(getClass().getResource("powergrid/Images/Garbage.png"));
@@ -61,8 +62,25 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawRect(1100, 150, 105, 55);
         g.drawRect(1500, 150, 100, 55);
         
-        g.drawImage(rightArrow, 1200, 160, 200, 200, null);
+        g.drawImage(rightArrow, 1520, 155, 60, 45, null);
+        g.drawImage(leftArrow, 1130, 155, 60, 45, null);
 
+        g2d.setStroke(new BasicStroke(5));
+        g.drawRect(1630, 150, 238, 55);
+        g.setFont(new Font("Arial", Font.PLAIN, 24));
+        g.drawString("Player Elecktros: 999", 1635, 185);   // define elecktros for player
+
+        g2d.setStroke(new BasicStroke(7));  // powerplant section --> not finished
+        g.drawRect(920, 220, 950, 300);
+
+        g2d.setStroke(new BasicStroke(5));
+        g.drawRect(920,530, 470, 200);  // coal
+        g.drawRect(920+490, 530, 460, 200);  // oil
+        g.drawRect(920, 740, 470, 200);  // garbage
+        g.drawRect(920+490, 740, 460, 200); // uranium
+
+        g.drawRect(920+360, 960, 200, 70);
+        
 
 
     }
