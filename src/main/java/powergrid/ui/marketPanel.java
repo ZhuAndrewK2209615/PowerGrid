@@ -25,8 +25,8 @@ public class marketPanel extends JPanel implements MouseInputListener{
             rightArrow = ImageIO.read(getClass().getResource("/powergrid/Images/right-arrow.png"));
             leftArrow = ImageIO.read(getClass().getResource("/powergrid/Images/left-arrow.png"));
             // will code player plant
-           // coal = ImageIO.read(getClass().getResource("powergrid/Images/coal.png"));
-           // garbage = ImageIO.read(getClass().getResource("powergrid/Images/Garbage.png"));
+           coal = ImageIO.read(getClass().getResource("/powergrid/Images/coal.png"));
+           garbage = ImageIO.read(getClass().getResource("/powergrid/Images/Garbage.png"));
             //oil = ImageIO.read(getClass().getResource("powergrid/Images/Oil.png"));
            // uranium = ImageIO.read(getClass().getResource("powergrid/Images/Uranium.png"));
            // rulesSymbol = ImageIO.read(getClass().getResource("powergrid/Images/QuestionSymbol.png"));
@@ -73,17 +73,25 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g2d.setStroke(new BasicStroke(7));  // powerplant section --> not finished
         g.drawRect(920, 220, 950, 300);
         g2d.setStroke(new BasicStroke(5));
-        g.drawRect(930, 230, 290, 275);  // powerplant section 1
-        g.drawRect(1245, 230, 290, 275);  // powerplant section 2
-        g.drawRect(1560, 230, 290, 275);  // powerplant section 3
-
-        
+        g.drawRect(935, 230, 290, 275);  // powerplant section 1
+        g.drawRect(1250, 230, 290, 275);  // powerplant section 2
+        g.drawRect(1565, 230, 290, 275);  // powerplant section 3
           
 
         g2d.setStroke(new BasicStroke(5));
+
         g.drawRect(920,530, 470, 200);  // coal
+        g2d.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString("Coal", 950, 580);
+        g.drawImage(coal, 950, 600, 100, 100, null);
+
         g.drawRect(920+490, 530, 460, 200);  // oil
+
         g.drawRect(920, 740, 470, 200);  // garbage
+        g2d.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString("Garbage", 925, 780);
+        g.drawImage(garbage, 950, 800, 100, 100, null);
+
         g.drawRect(920+490, 740, 460, 200); // uranium
 
         g.drawRect(920+360, 960, 200, 70);
