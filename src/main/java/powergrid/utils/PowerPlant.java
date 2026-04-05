@@ -57,7 +57,7 @@ public class PowerPlant implements Comparable<PowerPlant>{
         return plantNumber;
     }
 
-    public ResourceType getResourcetype()
+    public ResourceType getResourceType()
     {
         return fuelType;
     }

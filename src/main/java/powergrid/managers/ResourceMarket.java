@@ -16,7 +16,7 @@ public class ResourceMarket {
         currentStock.put(ResourceType.COAL, 24);
         currentStock.put(ResourceType.OIL, 18);
         currentStock.put(ResourceType.GARBAGE, 6);
-        currentStock.put(ResourceType.URANIUM, 2);
+        currentStock.put(ResourceType.URANIUM, 12);
 
         //initialize availableTokens
         availableTokens.put(ResourceType.COAL, 0);
@@ -48,6 +48,26 @@ public class ResourceMarket {
                 return 8 - (amountAvailable - 5);
             }
         }
+    }
+
+    public boolean canBuy(ResourceType r, Player p)
+    {
+        if (p.getElektro() >= getPrice(r) && currentStock.get(r) > 0)
+        {
+            boolean yes = false;
+            for(PowerPlant plant: p.getOwnedPlants())
+            {
+                if (plant.getResourceType() == r || (plant.getResourceType() == ResourceType.HYBRID && (r == ResourceType.COAL || r == ResourceType.OIL)))
+                {
+                    yes = true;
+                }
+            }
+            if (yes)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void buyResource(ResourceType type)
