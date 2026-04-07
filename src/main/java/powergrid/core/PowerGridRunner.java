@@ -15,8 +15,6 @@ public class PowerGridRunner {
         GameState.mapGraph.addRegion("Red");
         GameState.mapGraph.addRegion("Brown");
         GameState.mapGraph.setRegions();
-        GameState.activePlayer = GameState.players.get(0);
-        GameState.activePlayer.setColor(Color.ORANGE);
         GameState.players.get(1).setColor(Color.BLUE);
         GameState.players.get(2).setColor(Color.GREEN);
         GameState.players.get(3).setColor(Color.PINK);
@@ -32,6 +30,13 @@ public class PowerGridRunner {
             }
         }
         GameState.roundManager.determinePlayerOrder();
+        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(GameState.players.size() - 1);
+        for(int i=0; i<3; i++)
+        {
+            GameState.roundManager.advancePhase();
+            GameState.activePlayer.addPowerPlant(GameState.marketManager.getDeck().draw());
+        }
+        GameState.activePlayer.setColor(Color.ORANGE);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         PowerGridFrame game = new PowerGridFrame("Power Grid");
