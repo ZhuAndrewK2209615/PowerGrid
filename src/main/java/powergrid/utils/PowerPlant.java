@@ -62,9 +62,19 @@ public class PowerPlant implements Comparable<PowerPlant>{
         return fuelType;
     }
 
+    public ArrayList<ResourceType> getResourcesStored()
+    {
+        return resourcesStored;
+    }
+
+    public void removeResource(ResourceType r)
+    {
+        resourcesStored.remove(r);
+    }
+
     public boolean addResource(ResourceType r)
     {
-        if (resourcesStored.size() >= maxCapacity)
+        if (resourcesStored.size() >= maxCapacity || ((r != fuelType && fuelType != ResourceType.HYBRID) || (fuelType == ResourceType.HYBRID && r != ResourceType.COAL && r != ResourceType.OIL)))
         {
             return false;
         }

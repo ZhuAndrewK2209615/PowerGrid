@@ -97,4 +97,9 @@ public class ResourceMarket {
     {
         return availableTokens.get(type);
     }
+
+    public HashMap<ResourceType, Integer> getStockMap()
+    {
+        return currentStock;
+    }
 }

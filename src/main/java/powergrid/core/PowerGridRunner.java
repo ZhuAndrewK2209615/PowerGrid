@@ -2,6 +2,7 @@ package powergrid.core;
 import java.awt.Color;
 import java.io.*;
 import powergrid.*;
+import powergrid.utils.*;
 
 public class PowerGridRunner {
     public static void main(String[]args) throws IOException
@@ -34,7 +35,16 @@ public class PowerGridRunner {
         for(int i=0; i<3; i++)
         {
             GameState.roundManager.advancePhase();
-            GameState.activePlayer.addPowerPlant(GameState.marketManager.getDeck().draw());
+            PowerPlant next = GameState.marketManager.getDeck().draw();
+            for(int j=0; j<3; j++)
+            {
+                for(ResourceType r: GameState.resourceMarket.getStockMap().keySet())
+                {
+                    next.addResource(r);
+                }
+            }
+            
+            GameState.activePlayer.addPowerPlant(next);
         }
         GameState.activePlayer.setColor(Color.ORANGE);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------

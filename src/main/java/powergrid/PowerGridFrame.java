@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 import powergrid.ui.*;
 
 public class PowerGridFrame extends JFrame{
-    private static final int WIDTH = 1920;
-    private static final int HEIGHT = 1080;
+    public static final int WIDTH = 1920;
+    public static final int HEIGHT = 1080;
 
     public PowerGridFrame(String name) throws IOException{
         super(name);
