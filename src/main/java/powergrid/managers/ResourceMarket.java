@@ -16,7 +16,7 @@ public class ResourceMarket {
         currentStock.put(ResourceType.COAL, 24);
         currentStock.put(ResourceType.OIL, 18);
         currentStock.put(ResourceType.GARBAGE, 6);
-        currentStock.put(ResourceType.URANIUM, 2);
+        currentStock.put(ResourceType.URANIUM, 12);
 
         //initialize availableTokens
         availableTokens.put(ResourceType.COAL, 0);
@@ -96,5 +96,10 @@ public class ResourceMarket {
     public int getAvailableTokens(ResourceType type)
     {
         return availableTokens.get(type);
+    }
+
+    public HashMap<ResourceType, Integer> getStockMap()
+    {
+        return currentStock;
     }
 }

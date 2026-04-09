@@ -226,12 +226,12 @@ public class MapGraph {
                 constructPath(cityPath, destination, c, 0, shortestDistance);
                 cityPath = cityPath.reversed();
             }
-        }
-        for(City c: mapGraph.keySet())
-        {
-            if (c.wasVisited())
+            for(City city: mapGraph.keySet())
             {
-                c.toggleVisited();
+                if (city.wasVisited())
+                {
+                    city.toggleVisited();
+                }
             }
         }
         return new Path(shortestDistance + 10 + destination.getOwners().size() * 5, cityPath);
@@ -270,5 +270,10 @@ public class MapGraph {
                 origin.toggleVisited();
             }
         }
+    }
+
+    public HashMap<City, ArrayList<Connection>> getMapGraph()
+    {
+        return mapGraph;
     }
 }

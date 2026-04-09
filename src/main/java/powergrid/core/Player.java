@@ -1,11 +1,11 @@
 package powergrid.core;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import powergrid.utils.City;
 import powergrid.utils.PowerPlant;
 import powergrid.utils.ResourceType;
-import java.awt.Color;
 
 public class Player implements Comparable<Player> {
     private String name;
@@ -19,7 +19,7 @@ public class Player implements Comparable<Player> {
     private Color color;
 
     public Player() {
-        this("Player");
+        this("Player " + (GameState.players.size() + 1));
     }
 
     public Player(String name) {
