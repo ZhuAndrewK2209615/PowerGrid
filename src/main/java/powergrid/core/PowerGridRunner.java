@@ -1,4 +1,7 @@
 package powergrid.core;
+import java.io.IOException;
+
+import powergrid.PowerGridFrame;
 import powergrid.utils.*;
 import powergrid.*;
 import java.io.*;
@@ -23,7 +26,7 @@ public class PowerGridRunner {
         GameState.mapGraph.getCity("Dusseldorf").addOwner(GameState.activePlayer);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        PowerGridFrame game = new PowerGridFrame("Power Grid");
-        
+        //testing, remove this later
+        PowerGridFrame game = new PowerGridFrame("Testing");
     }
 }
