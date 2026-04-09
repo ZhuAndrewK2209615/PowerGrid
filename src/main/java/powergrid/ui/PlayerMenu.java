@@ -158,6 +158,7 @@ public class PlayerMenu implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
+        
         if (!menuEnabled)
             return;
         if (selectedResource == null)

@@ -199,6 +199,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
         if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70)){
             System.out.println("Finish");  // we have to change this
         }
+        repaint();
         }
 
     @Override
