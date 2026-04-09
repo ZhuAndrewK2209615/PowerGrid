@@ -2,6 +2,9 @@ package powergrid.ui;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import powergrid.core.GameState;
+import powergrid.utils.ResourceType;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -65,15 +68,44 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.fillRect(935, 230, 290, 275);  // powerplant section 1
         g.fillRect(1250, 230, 290, 275);  // powerplant section 2
         g.fillRect(1565, 230, 290, 275);  // powerplant section 3
-        g.fillRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
+
+        
+        if(GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer)){
+             g.setColor(Color.green);
+            g.fillRect(1120, 600, 240, 100);
+        }else g.fillRect(1120,600,240,100);
+        
+        
+
+        if(GameState.resourceMarket.getSupply(ResourceType.GARBAGE) > 0){
+            if(GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer)){
+                g.setColor(Color.green);
+                g.fillRect(1120, 800, 240, 100);
+            }
+        }else g.fillRect(1120,800,240,100);
+
+
+        if(GameState.resourceMarket.getSupply(ResourceType.OIL) > 0){
+            if(GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer)){
+                g.setColor(Color.green);
+                g.fillRect(1608, 600, 240, 100);
+            }
+        }else g.fillRect(1608,600,240,100);
+        
+        if(GameState.resourceMarket.getSupply(ResourceType.URANIUM) > 0){
+            if(GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer)){
+                g.setColor(Color.green);
+                g.fillRect(1608, 800, 240, 100);
+            }
+        }else g.fillRect(1608,800,240,100);
+
+        // got to remove this and replace it the code on top
+        /*g.fillRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
         g.fillRect(1120,800,240,100);  // button to buy resource (changes color we need to code)
         g.fillRect(1608,600,240,100);  // button to buy resource (changes color we need to code)
         g.fillRect(1608,800,240,100);  // button to buy resource (changes color we need to code)
 
-
-
-
-
+        */
         
     }
 
@@ -132,9 +164,10 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawImage(coal, 950, 600, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
         g.drawString("Current stock: 99", 1110, 580);  // we have to change stock
+        
         g.drawRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $x", 1165, 660);
+        g.drawString("Buy 1 for $x", 1165, 660); 
 
 
         g.drawRect(920+490, 530, 460, 200);  // oil
@@ -189,7 +222,35 @@ public class marketPanel extends JPanel implements MouseInputListener{
     
     @Override
     public void mouseClicked(MouseEvent e) {
-    }
+        // buying phase
+        int x = e.getX();
+        int y = e.getY();
+
+       if((x>= 1120 && x<= 1360) && (y>=600 && y<=700)){
+        if(!GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer)){
+            System.out.println("Cannot buy coal, you either don't have enough elecktro or the supply is low");
+        } else GameState.activePlayer.buyResource(ResourceType.COAL, 1);
+       }
+       else if((x>= 1120 && x<= 1360) && (y>=800 && y<=900)){
+            if(!GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer)){
+                System.out.println("Cannot buy garbage, you either don't have enough elecktro or the supply is low");
+            } else GameState.activePlayer.buyResource(ResourceType.GARBAGE, 1);
+        } 
+        else if((x>= 1604 && x<= 1848) && (y>=600 && y<=700)){
+            if(!GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer)){
+                System.out.println("Cannot buy oil, you either don't have enough resources or the supply is low");
+            } else GameState.activePlayer.buyResource(ResourceType.OIL, 1);
+        } 
+        else if((x>= 1604 && x<= 1848) && (y>=800 && y<=900)){
+            if(!GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer)){
+                System.out.println("Cannot buy uranium, you either don't have enough resources or the supply is low");
+            } else GameState.activePlayer.buyResource(ResourceType.URANIUM, 1);
+        }
+
+        if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70)){
+            System.out.println("Finish");  // we have to change this
+        }
+        }
 
     @Override
     public void mousePressed(MouseEvent e) {
