@@ -61,7 +61,7 @@ public class MapGraph {
         while (mapScanner.hasNextLine())
         {
             String[] data = mapScanner.nextLine().split(" ");
-            City newCity = new City(data[0], data[1], 0,0);
+            City newCity = new City(data[0], data[1], Integer.parseInt(data[data.length - 2]), Integer.parseInt(data[data.length - 1]));
             mapGraph.put(newCity, new ArrayList<Connection>());
             allCities.add(newCity);
             locator.put(data[0], newCity);

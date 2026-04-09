@@ -16,6 +16,7 @@ public class GameState {
     public static int currentRound; //how many total rounds passed
     public static int currentPhase; // what the current phase of the round is (eg., 2 -> auction, 3 -> buying resources, etc.)
     public static int step; // current step of the game, is either 1, 2, or 3
+    public static int phase2Requirement;
     public static boolean gameEnded;
     public static Player activePlayer;
     public static HashMap<Integer, HashMap<Integer, ArrayList<Integer>>> refillData = new HashMap<>();
@@ -25,6 +26,7 @@ public class GameState {
     public static void startGame()
     {
         //Instantiate managers
+        ImageLibrary.loadImages();
         auctionManager = new AuctionManager();
         marketManager = new MarketManager();
         mapGraph = new MapGraph();
@@ -36,6 +38,7 @@ public class GameState {
         currentRound = 1;
         currentPhase = 1;
         step = 1;
+        phase2Requirement = 7;
         gameEnded = false;
 
         //Load data into refillData
@@ -68,6 +71,10 @@ public class GameState {
             players.add(new Player());
         }
         numRegions = Math.min(amount, 5);
+        if (amount == 6)
+        {
+            phase2Requirement = 6;
+        }
         marketManager.setupMarket();
     }
 
@@ -85,5 +92,12 @@ public class GameState {
     public static void updateTurnOrder()
     {
         Collections.sort(players);
+    }
+
+    public static void triggerPhase2()
+    {
+        step = 2;
+        marketManager.removePlant(marketManager.getCurrentMarket().get(0));
+        marketManager.refillMarket();
     }
 }

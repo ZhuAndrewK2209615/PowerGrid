@@ -11,8 +11,8 @@ import powergrid.utils.*;
 public class PlayerMenu implements MouseListener{
 
     public boolean menuEnabled = true;
+    public boolean isBuying = false;
     public Player viewedPlayer;
-    private BufferedImage rightArrow, leftArrow, coal, oil, garbage, uranium;
     private HashMap<ResourceType, BufferedImage> resourcesImages = new HashMap<>();
     private HashMap<ResourceType, ArrayList<Pair>> resourcePositions = new HashMap<>();
     private HashMap<PowerPlant, Pair> powerPlantPositions = new HashMap<>();
@@ -24,16 +24,10 @@ public class PlayerMenu implements MouseListener{
     {
         try
         {
-            rightArrow = ImageIO.read(getClass().getResource("/powergrid/Images/right-arrow.png"));
-            leftArrow = ImageIO.read(getClass().getResource("/powergrid/Images/left-arrow.png"));
-            coal = ImageIO.read(getClass().getResource("/powergrid/Images/coal.png"));
-            oil = ImageIO.read(getClass().getResource("/powergrid/Images/Oil.png"));
-            garbage = ImageIO.read(getClass().getResource("/powergrid/Images/Garbage.png"));
-            uranium = ImageIO.read(getClass().getResource("/powergrid/Images/Uranium.png"));
-            resourcesImages.put(ResourceType.COAL, coal);
-            resourcesImages.put(ResourceType.OIL, oil);
-            resourcesImages.put(ResourceType.GARBAGE, garbage);
-            resourcesImages.put(ResourceType.URANIUM, uranium);
+            resourcesImages.put(ResourceType.COAL, ImageLibrary.coal);
+            resourcesImages.put(ResourceType.OIL, ImageLibrary.oil);
+            resourcesImages.put(ResourceType.GARBAGE, ImageLibrary.garbage);
+            resourcesImages.put(ResourceType.URANIUM, ImageLibrary.uranium);
             for(ResourceType r: GameState.resourceMarket.getStockMap().keySet())
             {
                 resourcePositions.put(r, new ArrayList<>());
@@ -78,8 +72,16 @@ public class PlayerMenu implements MouseListener{
 
         g.setColor(Color.black);
         g.setFont(new Font("Arial", Font.BOLD, 30));
-        g.drawString(GameState.activePlayer.getName() + " is buying resources", 1220, 65);   // define n
+        String action = "";
         String s = "Bureaucracy";
+        switch (GameState.roundManager.getPhase())
+        {
+            case 3: action = "buying resources"; s = "Building Houses"; break;
+            case 4: action = "building houses"; s = "Bureaucracy"; break;
+            case 5: action = "powering houses"; s = "Auction"; break;
+        }
+        g.drawString(GameState.activePlayer.getName() + " is " + action, 1220, 65);   // define n
+        
         if (GameState.roundManager.getNextPlayer() != null)
         {
             s = GameState.roundManager.getNextPlayer().getName();
@@ -96,8 +98,8 @@ public class PlayerMenu implements MouseListener{
         g.drawRect(1100, 150, 105, 55);
         g.drawRect(1500, 150, 100, 55);
         
-        g.drawImage(rightArrow, 1520, 155, 60, 45, null);
-        g.drawImage(leftArrow, 1130, 155, 60, 45, null);
+        g.drawImage(ImageLibrary.rightArrow, 1520, 155, 60, 45, null);
+        g.drawImage(ImageLibrary.leftArrow, 1130, 155, 60, 45, null);
 
         g2d.setStroke(new BasicStroke(5));
         g.drawRect(1630, 150, 238, 55);
@@ -135,10 +137,14 @@ public class PlayerMenu implements MouseListener{
             }
             x += 315;
         }
-        if (selectedResourcePos != null)
+        if (selectedResource != null)
         {
-            g2d.setColor(Color.BLUE);
-            g2d.drawRect(selectedResourcePos.getX(), selectedResourcePos.getY(), 40, 40);
+            if (selectedResourcePos != null)
+            {
+                g2d.setColor(Color.BLUE);
+                g2d.drawRect(selectedResourcePos.getX(), selectedResourcePos.getY(), 40, 40);
+            }
+           
             for(PowerPlant p: powerPlantPositions.keySet())
             {
                 Pair pos = powerPlantPositions.get(p);
@@ -178,7 +184,7 @@ public class PlayerMenu implements MouseListener{
             {
                 for(Pair p: resourcePositions.get(r))
                 {
-                    if (x > p.getX() && x < p.getX() + 40 && y > p.getY() && y < p.getY() + 40)
+                    if (x > p.getX() && x < p.getX() + 40 && y > p.getY() && y < p.getY() + 40 && !isBuying)
                     {
                         selectedResource = r;
                         selectedResourcePos = new Pair(p.getX(), p.getY());
@@ -203,14 +209,26 @@ public class PlayerMenu implements MouseListener{
                     boolean added = p.addResource(selectedResource);
                     if (added)
                     {
-                        selectedResourcePowerPlant.removeResource(selectedResource);
+                        if (!isBuying)
+                            selectedResourcePowerPlant.removeResource(selectedResource);
+                        selectedResource = null;
+                        isBuying = false;
                     }
                 }
             }
-            selectedResource = null;
+            if (!isBuying)
+            {
+                selectedResource = null;
+            }
             selectedResourcePos = null;
             selectedResourcePowerPlant = null;
         }
+    }
+
+    public void addResource(ResourceType r)
+    {
+        viewedPlayer = GameState.activePlayer;
+        selectedResource = r;
     }
 
     @Override

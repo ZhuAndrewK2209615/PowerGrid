@@ -57,7 +57,7 @@ public class ResourceMarket {
             boolean yes = false;
             for(PowerPlant plant: p.getOwnedPlants())
             {
-                if (plant.getResourceType() == r || (plant.getResourceType() == ResourceType.HYBRID && (r == ResourceType.COAL || r == ResourceType.OIL)))
+                if (plant.getResourcesStored().size() < plant.getMaxCapacity() && (plant.getResourceType() == r || (plant.getResourceType() == ResourceType.HYBRID && (r == ResourceType.COAL || r == ResourceType.OIL))))
                 {
                     yes = true;
                 }

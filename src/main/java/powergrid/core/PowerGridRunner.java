@@ -31,10 +31,13 @@ public class PowerGridRunner {
             }
         }
         GameState.roundManager.determinePlayerOrder();
-        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(GameState.players.size() - 1);
-        for(int i=0; i<3; i++)
+        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+        for(int i=0; i<4; i++)
         {
             GameState.roundManager.advancePhase();
+        }
+        for(int i=0; i<3; i++)
+        {
             PowerPlant next = GameState.marketManager.getDeck().draw();
             for(int j=0; j<1; j++)
             {

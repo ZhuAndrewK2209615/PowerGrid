@@ -119,4 +119,9 @@ public class PowerPlant implements Comparable<PowerPlant>{
     {
         return image;
     }
+
+    public int getMaxCapacity()
+    {
+        return maxCapacity;
+    }
 }

@@ -9,36 +9,19 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
-import powergrid.core.GameState;
-import powergrid.core.Player;
 import powergrid.utils.ResourceType;
+import powergrid.PowerGridFrame;
+import powergrid.core.*;
 
 public class marketPanel extends JPanel implements MouseInputListener{
 
-    private BufferedImage background, GermanMap, market, playerPlant, coal, garbage, oil, uranium, rulesSymbol, currentAuction, rightArrow, leftArrow;
     private PlayerMenu playerMenu;
     private MapUI mapUI;
     private MarketUI marketUI;
+    private PowerGridFrame parent;
 
-    public marketPanel(){
-        try {
-            GermanMap = ImageIO.read(getClass().getResource("/powergrid/Images/Germany Map.jpeg"));
-            market = ImageIO.read(getClass().getResource("/powergrid/Images/market.png"));
-            rightArrow = ImageIO.read(getClass().getResource("/powergrid/Images/right-arrow.png"));
-            leftArrow = ImageIO.read(getClass().getResource("/powergrid/Images/left-arrow.png"));
-            // will code player plant get image
-            coal = ImageIO.read(getClass().getResource("/powergrid/Images/coal.png"));
-            garbage = ImageIO.read(getClass().getResource("/powergrid/Images/Garbage.png"));
-            oil = ImageIO.read(getClass().getResource("/powergrid/Images/Oil.png"));
-            uranium = ImageIO.read(getClass().getResource("/powergrid/Images/uranium.png"));
-            background = ImageIO.read(getClass().getResource("/powergrid/Images/toChange.png"));
-           // rulesSymbol = ImageIO.read(getClass().getResource("powergrid/Images/QuestionSymbol.png"));
-           // currentAuction = ImageIO.read(getClass().getResource("powergrid/Images/energy.png"));
-
-        } catch (Exception e) {
-            System.out.println("Error");
-            return;
-        }
+    public marketPanel(PowerGridFrame parent){
+        this.parent = parent;
         playerMenu = new PlayerMenu();
         mapUI = new MapUI(this);
         marketUI = new MarketUI(this);
@@ -48,7 +31,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
 
     public void paintComponent(Graphics g){  // do all background color changes here, do not touch the pain method
         super.paintComponent(g);
-        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
 
         g.setColor(new Color(255,250,191));
         g.fillRect(920,530, 470, 200);  // coal
@@ -57,7 +40,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.fillRect(920+490, 740, 460, 200); // uranium
 
         
-        if(GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer)){
+        if(GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer) && !playerMenu.isBuying){
              g.setColor(Color.green);
             g.fillRect(1120, 600, 240, 100);
         }else g.fillRect(1120,600,240,100);
@@ -65,7 +48,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
         
 
         if(GameState.resourceMarket.getSupply(ResourceType.GARBAGE) > 0){
-            if(GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer)){
+            if(GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer) && !playerMenu.isBuying){
                 g.setColor(Color.green);
                 g.fillRect(1120, 800, 240, 100);
             }
@@ -73,14 +56,14 @@ public class marketPanel extends JPanel implements MouseInputListener{
 
 
         if(GameState.resourceMarket.getSupply(ResourceType.OIL) > 0){
-            if(GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer)){
+            if(GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer) && !playerMenu.isBuying){
                 g.setColor(Color.green);
                 g.fillRect(1608, 600, 240, 100);
             }
         }else g.fillRect(1608,600,240,100);
         
         if(GameState.resourceMarket.getSupply(ResourceType.URANIUM) > 0){
-            if(GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer)){
+            if(GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer) && !playerMenu.isBuying){
                 g.setColor(Color.green);
                 g.fillRect(1608, 800, 240, 100);
             }
@@ -111,7 +94,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawRect(920,530, 470, 200);  // coal
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
         g.drawString("Coal", 950, 580);
-        g.drawImage(coal, 950, 600, 100, 100, null);
+        g.drawImage(ImageLibrary.coal, 950, 600, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.COAL), 1110, 580);  // we have to change stock
         
@@ -123,28 +106,28 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawRect(920+490, 530, 460, 200);  // oil
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
         g.drawString("Oil", 1450, 580);
-        g.drawImage(oil, 1450, 600, 100, 100, null);
+        g.drawImage(ImageLibrary.oil, 1450, 600, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.OIL), 1600, 580); // we have to change stock
         g.drawRect(1120,800,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.OIL), 1165, 860);
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.GARBAGE), 1165, 860);
         
 
         g.drawRect(920, 740, 470, 200);  // garbage
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
         g.drawString("Garbage", 925, 780);
-        g.drawImage(garbage, 950, 800, 100, 100, null);
+        g.drawImage(ImageLibrary.garbage, 950, 800, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.GARBAGE), 1110, 780); // we have to change stock
         g.drawRect(1608,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.GARBAGE), 1650, 660);
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.OIL), 1650, 660);
 
         g.drawRect(920+490, 740, 460, 200); // uranium
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
         g.drawString("Uranium", 1420, 780);
-        g.drawImage(uranium, 1410, 770, 150, 150, null);
+        g.drawImage(ImageLibrary.uranium, 1410, 770, 150, 150, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.URANIUM), 1600, 780); // we have to change stock
         g.drawRect(1608,800,240,100);  // button to buy resource (changes color we need to code)
@@ -176,25 +159,25 @@ public class marketPanel extends JPanel implements MouseInputListener{
         int x = e.getX();
         int y = e.getY();
 
-       if((x>= 1120 && x<= 1360) && (y>=600 && y<=700)){
-        if(!GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer)){
-            System.out.println("Cannot buy coal, you either don't have enough elecktro or the supply is low");
-        } else GameState.activePlayer.buyResource(ResourceType.COAL, 1);
+       if((x>= 1120 && x<= 1360) && (y>=600 && y<=700) && !playerMenu.isBuying){
+        if(GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer)){
+            buyResource(ResourceType.COAL);
+        }
        }
-       else if((x>= 1120 && x<= 1360) && (y>=800 && y<=900)){
-            if(!GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer)){
-                System.out.println("Cannot buy garbage, you either don't have enough elecktro or the supply is low");
-            } else GameState.activePlayer.buyResource(ResourceType.GARBAGE, 1);
+       else if((x>= 1120 && x<= 1360) && (y>=800 && y<=900) && !playerMenu.isBuying){
+            if(GameState.resourceMarket.canBuy(ResourceType.GARBAGE, GameState.activePlayer)){
+                buyResource(ResourceType.GARBAGE);
+            }
         } 
-        else if((x>= 1604 && x<= 1848) && (y>=600 && y<=700)){
-            if(!GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer)){
-                System.out.println("Cannot buy oil, you either don't have enough resources or the supply is low");
-            } else GameState.activePlayer.buyResource(ResourceType.OIL, 1);
+        else if((x>= 1604 && x<= 1848) && (y>=600 && y<=700) && !playerMenu.isBuying){
+            if(GameState.resourceMarket.canBuy(ResourceType.OIL, GameState.activePlayer)){
+                buyResource(ResourceType.OIL);
+            }
         } 
-        else if((x>= 1604 && x<= 1848) && (y>=800 && y<=900)){
-            if(!GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer)){
-                System.out.println("Cannot buy uranium, you either don't have enough resources or the supply is low");
-            } else GameState.activePlayer.buyResource(ResourceType.URANIUM, 1);
+        else if((x>= 1604 && x<= 1848) && (y>=800 && y<=900) && !playerMenu.isBuying){
+            if(GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer)){
+                buyResource(ResourceType.URANIUM);
+            }
         }
 
         if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70)){
@@ -206,11 +189,24 @@ public class marketPanel extends JPanel implements MouseInputListener{
             }
             else
             {
-                //load next panel
+                GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(GameState.players.size() - 1);
+                GameState.roundManager.advancePhase();
+                setVisible(false);
+                parent.add(new MapPanel(parent));
+                parent.repaint();
+                parent.remove(this);
             }
         }
         repaint();
-        }
+    }
+
+    public void buyResource(ResourceType r)
+    {
+        GameState.activePlayer.spendElektro(GameState.resourceMarket.getPrice(r));
+        GameState.resourceMarket.buyResource(r);
+        playerMenu.isBuying = true;
+        playerMenu.addResource(r);
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {

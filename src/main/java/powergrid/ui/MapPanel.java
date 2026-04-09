@@ -1,15 +1,13 @@
 package powergrid.ui;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
 import java.util.List;
-import javax.imageio.*;
 import javax.swing.*;
 import powergrid.core.*;
 import powergrid.utils.*;
+import powergrid.PowerGridFrame;
 
 public class MapPanel extends JPanel implements MouseListener{
-    private BufferedImage background, electricity, question, discard;
     private City selectedCity;
     private Path shortestPath;
     private int panelX = 924;
@@ -19,15 +17,12 @@ public class MapPanel extends JPanel implements MouseListener{
     private PlayerMenu playerMenu;
     private MapUI mapUI;
     private MarketUI marketUI;
+    private PowerGridFrame parent;
 
-    public MapPanel()
+    public MapPanel(PowerGridFrame parent)
     {
         try
         {
-            background = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
-            electricity = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/energy.png"));
-            question = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
-            discard = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
             playerMenu = new PlayerMenu();
             mapUI = new MapUI(this);
             marketUI = new MarketUI(this);
@@ -36,6 +31,7 @@ public class MapPanel extends JPanel implements MouseListener{
         {
             System.out.println("Failed to load an image");
         }
+        this.parent = parent;
         addMouseListener(this);
         addMouseListener(playerMenu);
     }
@@ -43,7 +39,7 @@ public class MapPanel extends JPanel implements MouseListener{
     public void paint(Graphics g)
     {
         super.paint(g);
-        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
         Graphics2D g2d = (Graphics2D)g;
         mapUI.drawMap(g);
         if (selectedCity != null)
@@ -75,7 +71,7 @@ public class MapPanel extends JPanel implements MouseListener{
         }
         else
         {
-            g2d.setColor(new Color(185, 181, 171));
+            g2d.setColor(new Color(185, 181, 171)); //gray
         }
         g2d.fillRect(panelX + panelWidth / 2, panelY + 50, panelWidth / 2, panelHeight / 2 - 35);
         g2d.setColor(new Color(255, 87, 87));
@@ -136,7 +132,9 @@ public class MapPanel extends JPanel implements MouseListener{
         g2d.drawOval(1780, 925, 100, 100);
         g2d.drawOval(1780, 810, 100, 100);
         g2d.drawOval(1780, 695, 100, 100);
-
+        g2d.drawImage(ImageLibrary.questionMark, 1790, 935, 80, 80, null);
+        g2d.drawImage(ImageLibrary.electricity, 1790, 820, 80, 80, null);
+        g2d.drawImage(ImageLibrary.garbage, 1790, 705, 80, 80, null);
     }
 
     public void drawPrompt(Graphics2D g2d)
@@ -152,7 +150,7 @@ public class MapPanel extends JPanel implements MouseListener{
 
     public void drawFinishButton(Graphics2D g2d)
     {
-        g2d.setColor(new Color(0, 191, 99));
+        g2d.setColor(new Color(0, 191, 99)); //green
         g2d.fillRoundRect(1200, 981, 320, 50, 4, 4);
         g2d.setColor(Color.BLACK);
         g2d.drawRoundRect(1200, 981, 320, 50, 4, 4);
@@ -197,6 +195,10 @@ public class MapPanel extends JPanel implements MouseListener{
                 GameState.activePlayer.spendElektro(shortestPath.getDistance());
                 selectedCity = null;
                 shortestPath = null;
+                if (GameState.activePlayer.getCitiesBuilt().size() == GameState.phase2Requirement && GameState.step == 1)
+                {
+                    GameState.triggerPhase2();
+                }
             }
         }
         if (x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 + (panelHeight / 2 - 35) && y < panelY + panelHeight)
@@ -216,7 +218,12 @@ public class MapPanel extends JPanel implements MouseListener{
             }
             else
             {
-                //load next panel
+                GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+                GameState.roundManager.advancePhase();
+                setVisible(false);
+                parent.add(new EndPanel(parent));
+                parent.repaint();
+                parent.remove(this);
             }
         }
         repaint();

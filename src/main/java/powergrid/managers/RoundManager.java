@@ -23,7 +23,7 @@ public class RoundManager {
 
     public int advancePhase()
     {
-        if (phase<4) {
+        if (phase<5) {
             phase=phase+1;
         }
         else {
@@ -77,5 +77,10 @@ public class RoundManager {
             return playerOrder.get(0);
         }
         return playerOrder.get(currentPlayerIndex + 1);
+    }
+
+    public int getPhase()
+    {
+        return phase;
     }
 }
