@@ -36,7 +36,7 @@ public class PowerGridRunner {
         {
             GameState.roundManager.advancePhase();
             PowerPlant next = GameState.marketManager.getDeck().draw();
-            for(int j=0; j<3; j++)
+            for(int j=0; j<1; j++)
             {
                 for(ResourceType r: GameState.resourceMarket.getStockMap().keySet())
                 {

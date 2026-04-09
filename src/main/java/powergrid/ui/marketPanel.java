@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 import powergrid.core.GameState;
+import powergrid.core.Player;
 import powergrid.utils.ResourceType;
 
 public class marketPanel extends JPanel implements MouseInputListener{
@@ -112,11 +113,11 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Coal", 950, 580);
         g.drawImage(coal, 950, 600, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
-        g.drawString("Current stock: 99", 1110, 580);  // we have to change stock
+        g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.COAL), 1110, 580);  // we have to change stock
         
         g.drawRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $x", 1165, 660); 
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.COAL), 1165, 660); 
 
 
         g.drawRect(920+490, 530, 460, 200);  // oil
@@ -124,10 +125,10 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Oil", 1450, 580);
         g.drawImage(oil, 1450, 600, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
-        g.drawString("Current stock: 99", 1600, 580); // we have to change stock
+        g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.OIL), 1600, 580); // we have to change stock
         g.drawRect(1120,800,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $x", 1165, 860);
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.OIL), 1165, 860);
         
 
         g.drawRect(920, 740, 470, 200);  // garbage
@@ -135,20 +136,20 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Garbage", 925, 780);
         g.drawImage(garbage, 950, 800, 100, 100, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
-        g.drawString("Current stock: 99", 1110, 780); // we have to change stock
+        g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.GARBAGE), 1110, 780); // we have to change stock
         g.drawRect(1608,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $x", 1650, 660);
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.GARBAGE), 1650, 660);
 
         g.drawRect(920+490, 740, 460, 200); // uranium
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
         g.drawString("Uranium", 1420, 780);
         g.drawImage(uranium, 1410, 770, 150, 150, null);
         g2d.setFont(new Font("Arial", Font.PLAIN, 35));
-        g.drawString("Current stock: 99", 1600, 780); // we have to change stock
+        g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.URANIUM), 1600, 780); // we have to change stock
         g.drawRect(1608,800,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $x", 1650, 860);
+        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.URANIUM), 1650, 860);
 
         g.drawRect(920+360, 960, 200, 70);
         g.setColor(new Color(64,218,53));
@@ -197,7 +198,16 @@ public class marketPanel extends JPanel implements MouseInputListener{
         }
 
         if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70)){
-            System.out.println("Finish");  // we have to change this
+            Player next = GameState.roundManager.getNextPlayer();
+            if (next != null)
+            {
+                GameState.activePlayer = next;
+                playerMenu.viewedPlayer = GameState.activePlayer;
+            }
+            else
+            {
+                //load next panel
+            }
         }
         repaint();
         }
