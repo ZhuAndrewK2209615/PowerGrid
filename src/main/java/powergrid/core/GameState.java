@@ -1,6 +1,7 @@
 package powergrid.core;
 import java.util.*;
 import powergrid.managers.*;
+import java.io.*;
 
 public class GameState {
     //Manager instances
@@ -18,6 +19,7 @@ public class GameState {
     public static boolean gameEnded;
     public static Player activePlayer;
     public static HashMap<Integer, HashMap<Integer, ArrayList<Integer>>> refillData = new HashMap<>();
+    public static int numRegions;
     // The above map means HashMap<NumberOfPlayers, HashMap<CurrentStep, [coal, oil, garbage, uranim] refill values>>>
 
     public static void startGame()
@@ -59,12 +61,14 @@ public class GameState {
         mapGraph.initializeMap();
     }
 
-    public static void initializePlayers(int amount) //Use after number of players is chosen and game has started
+    public static void initializePlayers(int amount) throws IOException //Use after number of players is chosen and game has started
     {
         for(int i=0; i<amount; i++)
         {
             players.add(new Player());
         }
+        numRegions = Math.min(amount, 5);
+        marketManager.setupMarket();
     }
 
     public static void nextPhase()

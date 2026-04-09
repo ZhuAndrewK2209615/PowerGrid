@@ -2,8 +2,7 @@ package powergrid.managers;
 import java.util.ArrayList;
 import powergrid.core.Player;
 import powergrid.utils.PowerPlant;
-import powergrid.*;
-import powergrid.managers.MarketManager;
+import powergrid.core.*;
 
 // all methods are public, no helper methods used specific to this class
 
@@ -52,7 +51,7 @@ public class AuctionManager {
         highestBidder = activePlayers.get(0);
         highestBidder.spendElektro(currentBid);
         highestBidder.addPowerPlant(currentPlant);
-        MarketManager.removePlant(currentPlant);
+        GameState.marketManager.removePlant(currentPlant);
         currentBid = currentPlant.getPlantNumber();
         return true;
       }

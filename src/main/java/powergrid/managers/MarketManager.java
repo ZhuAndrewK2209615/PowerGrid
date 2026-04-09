@@ -2,6 +2,7 @@ package powergrid.managers;
 import java.util.ArrayList;
 import java.util.Collections;
 import powergrid.utils.PowerPlant;
+import java.io.*;
 
 // one private specifc to class helper method: STEP 3 HAS NOT BEEN INITIATED
 
@@ -17,7 +18,8 @@ public class MarketManager {
   }
 
 
-  public void setupMarket(){ // adds 4 powerplants to each market type
+  public void setupMarket() throws IOException{ // adds 4 powerplants to each market type
+    plantDeck.initializeDeck();
     ArrayList<PowerPlant> entireChosen = new ArrayList<>();
 
     if(!plantDeck.isEmpty()){
@@ -92,6 +94,18 @@ public class MarketManager {
     }
   }
 
+  public ArrayList<PowerPlant> getCurrentMarket()
+  {
+    return currentMarket;
+  }
 
+  public ArrayList<PowerPlant> getFutureMarket()
+  {
+    return futureMarket;
+  }
 
+  public Deck getDeck()
+  {
+    return plantDeck;
+  }
 }
