@@ -25,7 +25,7 @@ public class MapPanel extends JPanel implements MouseListener{
         try
         {
             background = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
-            electricity = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
+            electricity = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/energy.png"));
             question = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
             discard = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
             playerMenu = new PlayerMenu();

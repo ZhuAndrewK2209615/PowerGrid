@@ -3,10 +3,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.*;
 import javax.imageio.ImageIO;
 import powergrid.core.*;
 import powergrid.utils.*;
-import java.util.*;
 
 public class PlayerMenu implements MouseListener{
 
@@ -54,7 +54,7 @@ public class PlayerMenu implements MouseListener{
             resourcePositions.get(r).clear();
         }
         powerPlantPositions.clear();
-        g.setColor(new Color(229, 239, 244));
+        g.setColor(new Color(255,250,191));
         g.fillRect(924, 29, 945, 95);
         g.fillRect(924, 153, 145, 50);
         g.fillRect(1104, 150, 500, 55);

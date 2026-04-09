@@ -1,7 +1,7 @@
 package powergrid.managers;
 import java.util.*;
-import powergrid.utils.*;
 import powergrid.core.*;
+import powergrid.utils.*;
 
 public class ResourceMarket {
     private HashMap<ResourceType, Integer> currentStock; //amount of tokens available for purchase in the market
@@ -16,7 +16,7 @@ public class ResourceMarket {
         currentStock.put(ResourceType.COAL, 24);
         currentStock.put(ResourceType.OIL, 18);
         currentStock.put(ResourceType.GARBAGE, 6);
-        currentStock.put(ResourceType.URANIUM, 12);
+        currentStock.put(ResourceType.URANIUM, 2);
 
         //initialize availableTokens
         availableTokens.put(ResourceType.COAL, 0);
