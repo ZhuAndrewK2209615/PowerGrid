@@ -50,6 +50,26 @@ public class ResourceMarket {
         }
     }
 
+    public boolean canBuy(ResourceType r, Player p)
+    {
+        if (p.getElektro() >= getPrice(r) && currentStock.get(r) > 0)
+        {
+            boolean yes = false;
+            for(PowerPlant plant: p.getOwnedPlants())
+            {
+                if (plant.getResourceType() == r || (plant.getResourceType() == ResourceType.HYBRID && (r == ResourceType.COAL || r == ResourceType.OIL)))
+                {
+                    yes = true;
+                }
+            }
+            if (yes)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void buyResource(ResourceType type)
     {
         currentStock.put(type, currentStock.get(type) - 1);
