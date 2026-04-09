@@ -7,10 +7,9 @@ import javax.imageio.*;
 import javax.swing.*;
 import powergrid.core.*;
 import powergrid.utils.*;
-import java.util.*;
 
 public class MapPanel extends JPanel implements MouseListener{
-    private BufferedImage background;
+    private BufferedImage background, electricity, question, discard;
     private City selectedCity;
     private Path shortestPath;
     private int panelX = 924;
@@ -26,6 +25,9 @@ public class MapPanel extends JPanel implements MouseListener{
         try
         {
             background = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
+            electricity = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
+            question = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
+            discard = ImageIO.read(MapPanel.class.getResource("/powergrid/Images/background.png"));
             playerMenu = new PlayerMenu();
             mapUI = new MapUI(this);
             marketUI = new MarketUI(this);
@@ -59,6 +61,7 @@ public class MapPanel extends JPanel implements MouseListener{
             drawPrompt(g2d);
         }
         drawFinishButton(g2d);
+        drawInfoButtons(g2d);
         g.setColor(Color.RED);
     }
 
@@ -121,6 +124,19 @@ public class MapPanel extends JPanel implements MouseListener{
         g2d.setFont(new Font("Arial", Font.BOLD, 45));
         g2d.drawString("Confirm", 1425, 700);
         g2d.drawString("Cancel", 1425, 875);
+    }
+
+    public void drawInfoButtons(Graphics2D g2d)
+    {
+        g2d.setColor(new Color(255, 222, 89));
+        g2d.fillOval(1780, 925, 100, 100);
+        g2d.fillOval(1780, 810, 100, 100);
+        g2d.fillOval(1780, 695, 100, 100);
+        g2d.setColor(Color.BLACK);
+        g2d.drawOval(1780, 925, 100, 100);
+        g2d.drawOval(1780, 810, 100, 100);
+        g2d.drawOval(1780, 695, 100, 100);
+
     }
 
     public void drawPrompt(Graphics2D g2d)
