@@ -17,6 +17,7 @@ public class Player implements Comparable<Player> {
     private PowerPlant highestPowerPlant;
     private boolean passedBid;
     private Color color;
+    private boolean finishedPowering;
 
     public Player() {
         this("Player " + (GameState.players.size() + 1));
@@ -25,13 +26,14 @@ public class Player implements Comparable<Player> {
     public Player(String name) {
         this.name = name;
         this.color = Color.BLACK;
-        this.elektro = 50;
+        this.elektro = 9999;
         this.ownedPlants = new ArrayList<>();
         this.ownedCities = new HashMap<>();
         this.resources = new HashMap<>();
         this.citiesPowered = 0;
         this.highestPowerPlant = null;
         this.passedBid = false;
+        this.finishedPowering = false;
 
         resources.put(ResourceType.COAL, 0);
         resources.put(ResourceType.OIL, 0);
@@ -84,6 +86,16 @@ public class Player implements Comparable<Player> {
 
     public PowerPlant getHighestPowerPlant() {
         return highestPowerPlant;
+    }
+
+    public boolean finishedPowering()
+    {
+        return finishedPowering;
+    }
+
+    public void setFinished()
+    {
+        finishedPowering = true;
     }
 
     public boolean hasPassedBid() {

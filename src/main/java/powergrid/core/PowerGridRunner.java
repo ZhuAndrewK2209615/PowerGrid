@@ -29,7 +29,7 @@ public class PowerGridRunner {
         }
         for(Player p: GameState.players)
         {
-            for(int i=0; i<2; i++)
+            for(int i=0; i<3; i++)
             {
                 PowerPlant next = GameState.marketManager.getDeck().draw();
                 p.addPowerPlant(next);
