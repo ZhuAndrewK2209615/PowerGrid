@@ -26,7 +26,7 @@ public class Player implements Comparable<Player> {
     public Player(String name) {
         this.name = name;
         this.color = Color.BLACK;
-        this.elektro = 50;
+        this.elektro = 9999;
         this.ownedPlants = new ArrayList<>();
         this.ownedCities = new HashMap<>();
         this.resources = new HashMap<>();

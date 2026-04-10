@@ -80,13 +80,15 @@ public class PlayerMenu implements MouseListener{
             case 4: action = "building houses"; s = "Bureaucracy"; break;
             case 5: action = "powering houses"; s = "Auction"; break;
         }
-        g.drawString(GameState.activePlayer.getName() + " is " + action, 1220, 65);   // define n
+        if (!(GameState.gameEnded && GameState.roundManager.getPhase() == 5))
+            g.drawString(GameState.activePlayer.getName() + " is " + action, 1220, 65);   // define n
         
         if (GameState.roundManager.getNextPlayer() != null)
         {
             s = GameState.roundManager.getNextPlayer().getName();
         }
-        g.drawString("(Next: " + s + ")", 1300, 100);  // define n+1
+        if (!(GameState.gameEnded && GameState.roundManager.getPhase() == 5))
+            g.drawString("(Next: " + s + ")", 1300, 100);  // define n+1
 
         g2d.setStroke(new BasicStroke(5));  // number of houses code
         g.drawRect(920, 150, 150, 55);

@@ -2,7 +2,7 @@ package powergrid.ui;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.HashMap;
+import java.util.*;
 import javax.swing.*;
 import powergrid.PowerGridFrame;
 import powergrid.core.*;
@@ -15,6 +15,7 @@ public class EndPanel extends JPanel implements MouseListener{
     private MarketUI marketUI;
     private PlayerMenu playerMenu;
     private HashMap<Player, Integer> housesPowered;
+    private Player winner;
 
     public EndPanel(PowerGridFrame parent)
     {
@@ -23,6 +24,7 @@ public class EndPanel extends JPanel implements MouseListener{
         marketUI = new MarketUI(this);
         playerMenu = new PlayerMenu();
         housesPowered = new HashMap<>();
+        winner = null;
         for(Player p: GameState.players)
         {
             housesPowered.put(p, 0);
@@ -38,9 +40,26 @@ public class EndPanel extends JPanel implements MouseListener{
         mapUI.drawMap(g);
         marketUI.drawMarket(g);
         playerMenu.drawMenu(g);
-        drawPowerButtons(g);
+        if (winner == null)
+            drawPowerButtons(g);
         drawFinishButtons(g);
         drawInfoButtons(g);
+        if (GameState.gameEnded)
+        {
+            if (winner == null)
+            {
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+                g.drawString(GameState.gameEndRequirement + " houses have been built by a player; the game has ended", 1100, 65);
+                g.drawString("Each player powers as many houses as possible", 1100, 105);
+            }
+            else
+            {
+                g.setFont(new Font("Arial", Font.BOLD, 35));
+                g.drawString(winner.getName() + " has won!", 1250, 80);
+                g.setColor(winner.getColor());
+                g.fillOval(960, 40, 75, 75);
+            }
+        }
     }
 
     public void drawPowerButtons(Graphics g)
@@ -140,12 +159,21 @@ public class EndPanel extends JPanel implements MouseListener{
             }
         }
         //finish button
-        g2d.setFont(new Font("Arial", Font.BOLD, 35));
-        g2d.setColor(new Color(0, 191, 99));
-        g2d.fillRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
-        g2d.drawString("Finish and claim $" + GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer)), 1370, getHeight() - 50);
+        if (winner == null)
+        {
+            g2d.setFont(new Font("Arial", Font.BOLD, 35));
+            g2d.setColor(new Color(0, 191, 99));
+            g2d.fillRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
+            String s = "Finish and claim $" + GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer));
+            if (GameState.gameEnded)
+            {
+                s = "Proceed to next player";
+            }
+            g2d.drawString(s, 1370, getHeight() - 50);
+        }
+        
     }
 
     public void drawInfoButtons(Graphics g)
@@ -173,7 +201,7 @@ public class EndPanel extends JPanel implements MouseListener{
         for(int i=0; i<Math.min(3, GameState.activePlayer.getOwnedPlants().size()); i++)
         {
             PowerPlant currentPlant = GameState.activePlayer.getOwnedPlants().get(i);
-            if (x > tempX && x < tempX + 290 && y > 540 && y < 590)
+            if (x > tempX && x < tempX + 290 && y > 540 && y < 590 && winner == null)
             {
                 if (currentPlant.canPower() && !(currentPlant.getResourceType() == ResourceType.HYBRID && currentPlant.getQueuedResources().size() != currentPlant.getMaxCapacity() / 2))
                 {
@@ -194,28 +222,28 @@ public class EndPanel extends JPanel implements MouseListener{
                     else
                         oilStored++;
                 }
-                if (x > tempX + 180 && x < tempX + 230 && y > 640 && y < 695)
+                if (x > tempX + 180 && x < tempX + 230 && y > 640 && y < 695 && winner == null)
                 {
                     if (currentPlant.getCoalQueued() < coalStored)
                     {
                         currentPlant.addQueuedResource(ResourceType.COAL);
                     }
                 }
-                if (x > tempX + 180 && x < tempX + 230 && y > 695 && y < 750)
+                if (x > tempX + 180 && x < tempX + 230 && y > 695 && y < 750 && winner == null)
                 {
                     if (currentPlant.getOilQueued() < oilStored)
                     {
                         currentPlant.addQueuedResource(ResourceType.OIL);
                     }
                 }
-                if (x > tempX + 230 && x < tempX + 280 && y > 640 && y < 695)
+                if (x > tempX + 230 && x < tempX + 280 && y > 640 && y < 695 && winner == null)
                 {
                     if (currentPlant.getCoalQueued() > 0)
                     {
                         currentPlant.removeQueuedResource(ResourceType.COAL);
                     }
                 }
-                if (x > tempX + 230 && x < tempX + 280 && y > 695 && y < 750)
+                if (x > tempX + 230 && x < tempX + 280 && y > 695 && y < 750 && winner == null)
                 {
                     if (currentPlant.getOilQueued() > 0)
                     {
@@ -226,14 +254,19 @@ public class EndPanel extends JPanel implements MouseListener{
             tempX += 315;
         }
         
-        if (x > 1350 && x < 1750 && y > getHeight() - 100 && y < getHeight() - 20)
+        if (x > 1350 && x < 1750 && y > getHeight() - 100 && y < getHeight() - 20 && winner == null)
         {
             for(PowerPlant p: GameState.activePlayer.getOwnedPlants())
             {
                 p.clearQueue();
                 p.dePower();
             }
-            GameState.activePlayer.gainElektro(GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer)));
+            if (!GameState.gameEnded)
+                GameState.activePlayer.gainElektro(GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer)));
+            if (GameState.gameEnded)
+            {
+                GameState.activePlayer.setFinished();
+            }
             Player next = GameState.roundManager.getNextPlayer();
             if (next != null)
             {
@@ -242,12 +275,44 @@ public class EndPanel extends JPanel implements MouseListener{
             }
             else
             {
-                GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
-                GameState.roundManager.advancePhase();
-                setVisible(false);
-                // parent.add(new AuctionPanel());
-                parent.repaint();
-                parent.remove(this);
+                if (!GameState.gameEnded)
+                {
+                    GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+                    GameState.roundManager.advancePhase();
+                    setVisible(false);
+                    // parent.add(new AuctionPanel());
+                    parent.repaint();
+                    parent.remove(this);
+                }
+                else
+                {
+                    int highestAmount = -1;
+                    ArrayList<Player> potentialWinners = new ArrayList<>();
+                    for(Player p: housesPowered.keySet())
+                    {
+                        if (housesPowered.get(p) > highestAmount)
+                        {
+                            potentialWinners.clear();
+                            potentialWinners.add(p);
+                            highestAmount = housesPowered.get(p);
+                        }
+                        else if (housesPowered.get(p) == highestAmount)
+                        {
+                            potentialWinners.add(p);
+                        }
+                    }
+                    int highestElektro = -1;
+                    Player highestPlayer = null;
+                    for(Player p: potentialWinners)
+                    {
+                        if (p.getElektro() > highestElektro)
+                        {
+                            highestElektro = p.getElektro();
+                            highestPlayer = p;
+                        }
+                    }
+                    winner = highestPlayer;
+                }
             }
         }
         repaint();
