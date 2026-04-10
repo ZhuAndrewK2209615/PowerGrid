@@ -164,7 +164,7 @@ public class MapGraph {
         {
             ArrayList<City> idk = new ArrayList<>();
             idk.add(destination);
-            return new Path(0, idk);
+            return new Path(10 + destination.getOwners().size() * 5, idk);
         }
 
         //initialization

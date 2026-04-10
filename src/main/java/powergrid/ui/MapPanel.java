@@ -125,16 +125,16 @@ public class MapPanel extends JPanel implements MouseListener{
     public void drawInfoButtons(Graphics2D g2d)
     {
         g2d.setColor(new Color(255, 222, 89));
-        g2d.fillOval(1780, 925, 100, 100);
-        g2d.fillOval(1780, 810, 100, 100);
-        g2d.fillOval(1780, 695, 100, 100);
+        g2d.fillOval(1790, 950, 80, 80);
+        g2d.fillOval(1790, 855, 80, 80);
+        g2d.fillOval(1790, 760, 80, 80);
         g2d.setColor(Color.BLACK);
-        g2d.drawOval(1780, 925, 100, 100);
-        g2d.drawOval(1780, 810, 100, 100);
-        g2d.drawOval(1780, 695, 100, 100);
-        g2d.drawImage(ImageLibrary.questionMark, 1790, 935, 80, 80, null);
-        g2d.drawImage(ImageLibrary.electricity, 1790, 820, 80, 80, null);
-        g2d.drawImage(ImageLibrary.garbage, 1790, 705, 80, 80, null);
+        g2d.drawOval(1790, 950, 80, 80);
+        g2d.drawOval(1790, 855, 80, 80);
+        g2d.drawOval(1790, 760, 80, 80);
+        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
+        g2d.drawImage(ImageLibrary.electricity, 1800, 865, 60, 60, null);
+        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
     }
 
     public void drawPrompt(Graphics2D g2d)

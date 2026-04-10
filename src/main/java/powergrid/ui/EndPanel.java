@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
+import java.util.HashMap;
 
 public class EndPanel extends JPanel implements MouseListener{
     
@@ -13,7 +14,7 @@ public class EndPanel extends JPanel implements MouseListener{
     private MapUI mapUI;
     private MarketUI marketUI;
     private PlayerMenu playerMenu;
-    private int housesPowered;
+    private HashMap<Player, Integer> housesPowered;
 
     public EndPanel(PowerGridFrame parent)
     {
@@ -21,6 +22,11 @@ public class EndPanel extends JPanel implements MouseListener{
         mapUI = new MapUI(this);
         marketUI = new MarketUI(this);
         playerMenu = new PlayerMenu();
+        housesPowered = new HashMap<>();
+        for(Player p: GameState.players)
+        {
+            housesPowered.put(p, 0);
+        }
         addMouseListener(this);
         addMouseListener(playerMenu);
     }
@@ -33,12 +39,14 @@ public class EndPanel extends JPanel implements MouseListener{
         marketUI.drawMarket(g);
         playerMenu.drawMenu(g);
         drawPowerButtons(g);
+        drawFinishButtons(g);
+        drawInfoButtons(g);
     }
 
     public void drawPowerButtons(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
-        int x = 980;
+        int x = 935;
         g2d.setStroke(new BasicStroke(5));
         for(PowerPlant p: GameState.activePlayer.getOwnedPlants())
         {
@@ -53,17 +61,165 @@ public class EndPanel extends JPanel implements MouseListener{
                 g2d.setColor(new Color(185, 181, 171));
                 status = "Cannot Power";
             }
-            g2d.fillRoundRect(x, 540, 200, 50, 10, 10);
+            if (p.canPower() && p.getResourceType() == ResourceType.HYBRID && p.getQueuedResources().size() != p.getMaxCapacity() / 2)
+            {
+                g2d.setColor(new Color(185, 181, 171));
+            }
+            if (p.isPowered())
+            {
+                g2d.setColor(new Color(255, 222, 89));
+                status = "Powered";
+            }
+            g2d.fillRoundRect(x, 540, 290, 50, 10, 10);
             g2d.setColor(Color.BLACK);
-            g2d.drawRoundRect(x, 540, 200, 50, 10, 10);
+            g2d.drawRoundRect(x, 540, 290, 50, 10, 10);
             g2d.setFont(new Font("Arial", Font.PLAIN, 20));
-            g2d.drawString(status, x + 30 + ((status.length() - 12) * -5), 570);
+            g2d.drawString(status, x + 80 + ((status.length() - 12) * -5), 570);
+            if (p.getResourceType() == ResourceType.HYBRID && !p.isPowered() && p.canPower())
+            {
+                g2d.setColor(new Color(185, 181, 171));
+                g2d.fillRect(x + 10, 600, 270, 150);
+                g2d.setColor(Color.BLACK);
+                g2d.drawRect(x + 10, 600, 270, 150);
+                g2d.drawLine(x + 10, 640, x + 280, 640);
+                g2d.drawLine(x + 10, 695, x + 280, 695);
+                g2d.drawLine(x + 180, 640, x + 180, 750);
+                g2d.drawLine(x + 230, 640, x + 230, 750);
+                g2d.setFont(new Font("Arial", Font.BOLD, 25));
+                g2d.drawString("Using", x + 110, 630);
+                g2d.drawString("Coal: " + p.getCoalQueued(), x + 50, 680);
+                g2d.drawString("Oil: " + p.getOilQueued(), x + 50, 730);
+                g2d.drawString("+", x + 200, 680);
+                g2d.drawString("+", x + 200, 730);
+                g2d.drawString("-", x + 250, 680);
+                g2d.drawString("-", x + 250, 730);
+            }
             x += 315;
         }
     }
 
+    public void drawFinishButtons(Graphics g)
+    {
+        Graphics2D g2d = (Graphics2D)g;
+        //houses powered counter
+        g2d.setColor(new Color(229, 239, 244));
+        g2d.setStroke(new BasicStroke(5));
+        g2d.fillRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
+        g2d.setColor(Color.BLACK);
+        g2d.drawRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
+        g2d.setFont(new Font("Arial", Font.BOLD, 35));
+        g2d.drawString("Houses powered: " + housesPowered.get(GameState.activePlayer), 945, getHeight() - 50);
+
+        //finish button
+        g2d.setColor(new Color(0, 191, 99));
+        g2d.fillRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
+        g2d.setColor(Color.BLACK);
+        g2d.drawRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
+        g2d.drawString("Finish and claim $" + GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer)), 1370, getHeight() - 50);
+    }
+
+    public void drawInfoButtons(Graphics g)
+    {
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.setColor(new Color(255, 222, 89));
+        g2d.fillOval(1790, 950, 80, 80);
+        g2d.fillOval(1790, 855, 80, 80);
+        g2d.fillOval(1790, 760, 80, 80);
+        g2d.setColor(Color.BLACK);
+        g2d.drawOval(1790, 950, 80, 80);
+        g2d.drawOval(1790, 855, 80, 80);
+        g2d.drawOval(1790, 760, 80, 80);
+        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
+        g2d.drawImage(ImageLibrary.electricity, 1800, 865, 60, 60, null);
+        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        //detect clicks on power buttons and coal/oil ratios
+        int tempX = 935;
+        for(int i=0; i<Math.min(3, GameState.activePlayer.getOwnedPlants().size()); i++)
+        {
+            PowerPlant currentPlant = GameState.activePlayer.getOwnedPlants().get(i);
+            if (x > tempX && x < tempX + 290 && y > 540 && y < 590)
+            {
+                if (currentPlant.canPower() && !(currentPlant.getResourceType() == ResourceType.HYBRID && currentPlant.getQueuedResources().size() != currentPlant.getMaxCapacity() / 2))
+                {
+                    currentPlant.power();
+                    int newAmount = Math.min(housesPowered.get(GameState.activePlayer) + currentPlant.getCitiesPowered(), GameState.activePlayer.getCitiesBuilt().size());
+                    housesPowered.put(GameState.activePlayer, newAmount);
+
+                }
+            }
+            if (currentPlant.getResourceType() == ResourceType.HYBRID)
+            {
+                int coalStored = 0;
+                int oilStored = 0;
+                for(ResourceType r: currentPlant.getResourcesStored())
+                {
+                    if (r == ResourceType.COAL)
+                        coalStored++;
+                    else
+                        oilStored++;
+                }
+                if (x > tempX + 180 && x < tempX + 230 && y > 640 && y < 695)
+                {
+                    if (currentPlant.getCoalQueued() < coalStored)
+                    {
+                        currentPlant.addQueuedResource(ResourceType.COAL);
+                    }
+                }
+                if (x > tempX + 180 && x < tempX + 230 && y > 695 && y < 750)
+                {
+                    if (currentPlant.getOilQueued() < oilStored)
+                    {
+                        currentPlant.addQueuedResource(ResourceType.OIL);
+                    }
+                }
+                if (x > tempX + 230 && x < tempX + 280 && y > 640 && y < 695)
+                {
+                    if (currentPlant.getCoalQueued() > 0)
+                    {
+                        currentPlant.removeQueuedResource(ResourceType.COAL);
+                    }
+                }
+                if (x > tempX + 230 && x < tempX + 280 && y > 695 && y < 750)
+                {
+                    if (currentPlant.getOilQueued() > 0)
+                    {
+                        currentPlant.removeQueuedResource(ResourceType.OIL);
+                    }
+                }
+            }
+            tempX += 315;
+        }
+        
+        if (x > 1350 && x < 1750 && y > getHeight() - 100 && y < getHeight() - 20)
+        {
+            for(PowerPlant p: GameState.activePlayer.getOwnedPlants())
+            {
+                p.clearQueue();
+                p.dePower();
+            }
+            GameState.activePlayer.gainElektro(GameState.activePlayer.calculateIncome(housesPowered.get(GameState.activePlayer)));
+            Player next = GameState.roundManager.getNextPlayer();
+            if (next != null)
+            {
+                GameState.activePlayer = next;
+                playerMenu.viewedPlayer = GameState.activePlayer;
+            }
+            else
+            {
+                GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+                GameState.roundManager.advancePhase();
+                setVisible(false);
+                // parent.add(new AuctionPanel());
+                parent.repaint();
+                parent.remove(this);
+            }
+        }
         repaint();
     }
 

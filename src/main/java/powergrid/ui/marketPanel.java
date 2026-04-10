@@ -43,7 +43,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
         if(GameState.resourceMarket.canBuy(ResourceType.COAL, GameState.activePlayer) && !playerMenu.isBuying){
              g.setColor(Color.green);
             g.fillRect(1120, 600, 240, 100);
-        }else g.fillRect(1120,600,240,100);
+        }else {g.setColor(new Color(255,250,191)); g.fillRect(1120,600,240,100); }
         
         
 
@@ -52,7 +52,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
                 g.setColor(Color.green);
                 g.fillRect(1120, 800, 240, 100);
             }
-        }else g.fillRect(1120,800,240,100);
+        }else {g.setColor(new Color(255,250,191)); g.fillRect(1120,800,240,100); }
 
 
         if(GameState.resourceMarket.getSupply(ResourceType.OIL) > 0){
@@ -60,14 +60,14 @@ public class marketPanel extends JPanel implements MouseInputListener{
                 g.setColor(Color.green);
                 g.fillRect(1608, 600, 240, 100);
             }
-        }else g.fillRect(1608,600,240,100);
+        }else {g.setColor(new Color(255,250,191)); g.fillRect(1608,600,240,100);}
         
         if(GameState.resourceMarket.getSupply(ResourceType.URANIUM) > 0){
             if(GameState.resourceMarket.canBuy(ResourceType.URANIUM, GameState.activePlayer) && !playerMenu.isBuying){
                 g.setColor(Color.green);
                 g.fillRect(1608, 800, 240, 100);
             }
-        }else g.fillRect(1608,800,240,100);
+        }else {g.setColor(new Color(255,250,191)); g.fillRect(1608,800,240,100);}
 
         // got to remove this and replace it the code on top
         /*g.fillRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
@@ -100,7 +100,12 @@ public class marketPanel extends JPanel implements MouseInputListener{
         
         g.drawRect(1120,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.COAL), 1165, 660); 
+        String s = "Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.COAL);
+        if (GameState.resourceMarket.getSupply(ResourceType.COAL) == 0)
+        {
+            s = "Unavailable";
+        }
+        g.drawString(s, 1165, 660); 
 
 
         g.drawRect(920+490, 530, 460, 200);  // oil
@@ -111,7 +116,12 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.OIL), 1600, 580); // we have to change stock
         g.drawRect(1120,800,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.GARBAGE), 1165, 860);
+        s = "Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.GARBAGE);
+        if (GameState.resourceMarket.getSupply(ResourceType.OIL) == 0)
+        {
+            s = "Unavailable";
+        }
+        g.drawString(s, 1165, 860);
         
 
         g.drawRect(920, 740, 470, 200);  // garbage
@@ -122,7 +132,12 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.GARBAGE), 1110, 780); // we have to change stock
         g.drawRect(1608,600,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.OIL), 1650, 660);
+        s = "Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.OIL);
+        if (GameState.resourceMarket.getSupply(ResourceType.GARBAGE) == 0)
+        {
+            s = "Unavailable";
+        }
+        g.drawString(s, 1650, 660);
 
         g.drawRect(920+490, 740, 460, 200); // uranium
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
@@ -132,7 +147,12 @@ public class marketPanel extends JPanel implements MouseInputListener{
         g.drawString("Current stock: " + GameState.resourceMarket.getSupply(ResourceType.URANIUM), 1600, 780); // we have to change stock
         g.drawRect(1608,800,240,100);  // button to buy resource (changes color we need to code)
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.URANIUM), 1650, 860);
+        s = "Buy 1 for $" + GameState.resourceMarket.getPrice(ResourceType.URANIUM);
+        if (GameState.resourceMarket.getSupply(ResourceType.URANIUM) == 0)
+        {
+            s = "Unavailable";
+        }
+        g.drawString(s, 1650, 860);
 
         g.drawRect(920+360, 960, 200, 70);
         g.setColor(new Color(64,218,53));
