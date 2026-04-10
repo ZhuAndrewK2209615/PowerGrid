@@ -32,9 +32,17 @@ public class PowerGridRunner {
             for(int i=0; i<2; i++)
             {
                 PowerPlant next = GameState.marketManager.getDeck().draw();
-                p.addPowerPlant(next);
+                while (next.getResourceType() != ResourceType.HYBRID)
+                {
+                    next = GameState.marketManager.getDeck().draw();
+                }
+                next.addResource(ResourceType.COAL);
+                next.addResource(ResourceType.COAL);
+                GameState.roundManager.getPlayerOrder().get(5).addPowerPlant(next);
             }
+            break;
         }
+        GameState.gameEnded = true;
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         //testing, remove this later

@@ -3,9 +3,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
+import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
-import powergrid.PowerGridFrame;
 
 public class MapPanel extends JPanel implements MouseListener{
     private City selectedCity;
@@ -198,6 +198,10 @@ public class MapPanel extends JPanel implements MouseListener{
                 if (GameState.activePlayer.getCitiesBuilt().size() == GameState.phase2Requirement && GameState.step == 1)
                 {
                     GameState.triggerPhase2();
+                }
+                if (GameState.activePlayer.getCitiesBuilt().size() == GameState.gameEndRequirement)
+                {
+                    GameState.gameEnded = true;
                 }
             }
         }

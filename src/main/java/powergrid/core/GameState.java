@@ -1,7 +1,7 @@
 package powergrid.core;
+import java.io.*;
 import java.util.*;
 import powergrid.managers.*;
-import java.io.*;
 
 public class GameState {
     //Manager instances
@@ -17,6 +17,7 @@ public class GameState {
     public static int currentPhase; // what the current phase of the round is (eg., 2 -> auction, 3 -> buying resources, etc.)
     public static int step; // current step of the game, is either 1, 2, or 3
     public static int phase2Requirement;
+    public static int gameEndRequirement;
     public static boolean gameEnded;
     public static Player activePlayer;
     public static HashMap<Integer, HashMap<Integer, ArrayList<Integer>>> refillData = new HashMap<>();
@@ -39,6 +40,7 @@ public class GameState {
         currentPhase = 1;
         step = 1;
         phase2Requirement = 7;
+        gameEndRequirement = 17;
         gameEnded = false;
 
         //Load data into refillData
@@ -74,6 +76,11 @@ public class GameState {
         if (amount == 6)
         {
             phase2Requirement = 6;
+            gameEndRequirement = 14;
+        }
+        if (amount == 5)
+        {
+            gameEndRequirement = 15;
         }
         marketManager.setupMarket();
     }

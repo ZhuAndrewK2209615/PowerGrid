@@ -1,12 +1,12 @@
 package powergrid.ui;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
+import javax.swing.*;
 import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
-import java.util.HashMap;
 
 public class EndPanel extends JPanel implements MouseListener{
     
@@ -45,6 +45,10 @@ public class EndPanel extends JPanel implements MouseListener{
 
     public void drawPowerButtons(Graphics g)
     {
+        if (playerMenu.viewedPlayer != GameState.activePlayer)
+        {
+            return;
+        }
         Graphics2D g2d = (Graphics2D)g;
         int x = 935;
         g2d.setStroke(new BasicStroke(5));
@@ -101,16 +105,42 @@ public class EndPanel extends JPanel implements MouseListener{
     public void drawFinishButtons(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
-        //houses powered counter
-        g2d.setColor(new Color(229, 239, 244));
         g2d.setStroke(new BasicStroke(5));
-        g2d.fillRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
-        g2d.setFont(new Font("Arial", Font.BOLD, 35));
-        g2d.drawString("Houses powered: " + housesPowered.get(GameState.activePlayer), 945, getHeight() - 50);
-
+        //houses powered counter
+        if (!GameState.gameEnded)
+        {
+            g2d.setColor(new Color(229, 239, 244));
+            g2d.setStroke(new BasicStroke(5));
+            g2d.fillRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRoundRect(925, getHeight() - 100, 350, 80, 10, 10);
+            g2d.setFont(new Font("Arial", Font.BOLD, 35));
+            g2d.drawString("Houses powered: " + housesPowered.get(GameState.activePlayer), 945, getHeight() - 50);
+        }
+        else
+        {
+            g2d.setColor(new Color(229, 239, 244));
+            g2d.fillRoundRect(925, getHeight() - 225, 350, 215, 10, 10);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRoundRect(925, getHeight() - 225, 350, 215, 10, 10);
+            g2d.drawLine(925, getHeight() - 185, 1275, getHeight() - 185);
+            g2d.setFont(new Font("Arial", Font.BOLD, 25));
+            g2d.drawString("Total Houses Powered: ", 955, getHeight() - 195);
+            g2d.setFont(new Font("Arial", Font.BOLD, 20));
+            int y = getHeight() - 160;
+            for(Player p: housesPowered.keySet())
+            {
+                String value = "" + housesPowered.get(p);
+                if (!p.finishedPowering())
+                {
+                    value = "?";
+                }
+                g2d.drawString(p.getName() + ": " + value + " houses", 945, y);
+                y += 25;
+            }
+        }
         //finish button
+        g2d.setFont(new Font("Arial", Font.BOLD, 35));
         g2d.setColor(new Color(0, 191, 99));
         g2d.fillRoundRect(1350, getHeight() - 100, 400, 80, 10, 10);
         g2d.setColor(Color.BLACK);
