@@ -1,11 +1,11 @@
 package powergrid.core;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import powergrid.utils.City;
 import powergrid.utils.PowerPlant;
 import powergrid.utils.ResourceType;
-import java.awt.Color;
 
 public class Player implements Comparable<Player> {
     private String name;
@@ -17,21 +17,23 @@ public class Player implements Comparable<Player> {
     private PowerPlant highestPowerPlant;
     private boolean passedBid;
     private Color color;
+    private boolean finishedPowering;
 
     public Player() {
-        this("Player");
+        this("Player " + (GameState.players.size() + 1));
     }
 
     public Player(String name) {
         this.name = name;
         this.color = Color.BLACK;
-        this.elektro = 50;
+        this.elektro = 9999;
         this.ownedPlants = new ArrayList<>();
         this.ownedCities = new HashMap<>();
         this.resources = new HashMap<>();
         this.citiesPowered = 0;
         this.highestPowerPlant = null;
         this.passedBid = false;
+        this.finishedPowering = false;
 
         resources.put(ResourceType.COAL, 0);
         resources.put(ResourceType.OIL, 0);
@@ -84,6 +86,16 @@ public class Player implements Comparable<Player> {
 
     public PowerPlant getHighestPowerPlant() {
         return highestPowerPlant;
+    }
+
+    public boolean finishedPowering()
+    {
+        return finishedPowering;
+    }
+
+    public void setFinished()
+    {
+        finishedPowering = true;
     }
 
     public boolean hasPassedBid() {

@@ -1,7 +1,7 @@
 package powergrid.managers;
 import java.util.*;
-import powergrid.utils.*;
 import powergrid.core.*;
+import powergrid.utils.*;
 
 public class ResourceMarket {
     private HashMap<ResourceType, Integer> currentStock; //amount of tokens available for purchase in the market
@@ -50,6 +50,26 @@ public class ResourceMarket {
         }
     }
 
+    public boolean canBuy(ResourceType r, Player p)
+    {
+        if (p.getElektro() >= getPrice(r) && currentStock.get(r) > 0)
+        {
+            boolean yes = false;
+            for(PowerPlant plant: p.getOwnedPlants())
+            {
+                if (plant.getResourcesStored().size() < plant.getMaxCapacity() && (plant.getResourceType() == r || (plant.getResourceType() == ResourceType.HYBRID && (r == ResourceType.COAL || r == ResourceType.OIL))))
+                {
+                    yes = true;
+                }
+            }
+            if (yes)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void buyResource(ResourceType type)
     {
         currentStock.put(type, currentStock.get(type) - 1);
@@ -76,5 +96,10 @@ public class ResourceMarket {
     public int getAvailableTokens(ResourceType type)
     {
         return availableTokens.get(type);
+    }
+
+    public HashMap<ResourceType, Integer> getStockMap()
+    {
+        return currentStock;
     }
 }
