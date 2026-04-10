@@ -272,6 +272,16 @@ public class MapGraph {
         }
     }
 
+    public ArrayList<String> getMapRegions()
+    {
+        return new ArrayList<>(mapRegions);
+    }
+
+    public void removeRegion(String regionRemoved)
+    {
+        mapRegions.remove(regionRemoved);
+    }
+}
     public HashMap<City, ArrayList<Connection>> getMapGraph()
     {
         return mapGraph;
