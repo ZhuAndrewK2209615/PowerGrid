@@ -2,6 +2,7 @@ package powergrid.core;
 import java.io.*;
 import java.util.*;
 import powergrid.managers.*;
+import java.awt.Color;
 
 public class GameState {
     //Manager instances
@@ -22,6 +23,8 @@ public class GameState {
     public static Player activePlayer;
     public static HashMap<Integer, HashMap<Integer, ArrayList<Integer>>> refillData = new HashMap<>();
     public static int numRegions;
+    public static ArrayList<Color> playerColors;
+    public static boolean firstRound;
     // The above map means HashMap<NumberOfPlayers, HashMap<CurrentStep, [coal, oil, garbage, uranim] refill values>>>
 
     public static void startGame()
@@ -42,6 +45,15 @@ public class GameState {
         phase2Requirement = 7;
         gameEndRequirement = 17;
         gameEnded = false;
+        firstRound = true;
+        playerColors = new ArrayList<>();
+        playerColors.add(Color.RED);
+        playerColors.add(Color.PINK);
+        playerColors.add(new Color(90, 29, 161));
+        playerColors.add(new Color(186, 186, 0));
+        playerColors.add(new Color(7, 145, 19));
+        playerColors.add(new Color(9, 96, 150));
+
 
         //Load data into refillData
         Scanner refillScanner = new Scanner(GameState.class.getResourceAsStream("/powergrid/data/RefillData.txt"));
@@ -66,7 +78,7 @@ public class GameState {
         mapGraph.initializeMap();
     }
 
-    public static void initializePlayers(int amount) throws IOException //Use after number of players is chosen and game has started
+    public static void initializePlayers(int amount) //Use after number of players is chosen and game has started
     {
         for(int i=0; i<amount; i++)
         {

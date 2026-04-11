@@ -277,10 +277,12 @@ public class EndPanel extends JPanel implements MouseListener{
             {
                 if (!GameState.gameEnded)
                 {
+                    GameState.roundManager.determinePlayerOrder();
                     GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                     GameState.roundManager.advancePhase();
+                    GameState.firstRound = false;
                     setVisible(false);
-                    // parent.add(new AuctionPanel());
+                    parent.add(new AuctionPanel(parent));
                     parent.repaint();
                     parent.remove(this);
                 }

@@ -1,18 +1,15 @@
 package powergrid.ui;
 
 import powergrid.PowerGridFrame;
-import powergrid.core.GameState;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.HashMap;
+import powergrid.core.*;
 
 public class SetupPanel extends JPanel implements MouseListener, KeyListener {
-    private boolean isSetupComplete;
-    private String selectedMap;
     private int playerCount;
     private int regionCount;
 
@@ -23,23 +20,18 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     private Rectangle startButton;
     private Rectangle finishButton;
 
-    private BufferedImage backgroundImage;
-    private BufferedImage dec1Image;
     private BufferedImage dec2Image;
     private BufferedImage dec3HouseImage;
-    private BufferedImage mapImage;
     private BufferedImage checkMarkImage;
 
     private HashMap<String, Rectangle> regionBoxes;
+    private PowerGridFrame parent;
 
-    public SetupPanel() {
+    public SetupPanel(PowerGridFrame parent) {
         try {
-            backgroundImage = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Background.png"));
-            dec1Image = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Setup Dec1.png"));
+            checkMarkImage = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Check Mark.png")); //I put a temporary check mark here, transfer actual images to github later
             dec2Image = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Setup Dec2.png"));
             dec3HouseImage = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Setup House.png"));
-            mapImage = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Germany Map.jpeg"));
-            checkMarkImage = ImageIO.read(SetupPanel.class.getResource("/powergrid/Images/Check Mark.png"));
         } catch (Exception e) {
             System.out.println("Background image failed to load");
         }
@@ -48,8 +40,6 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
         addMouseListener(this);
         addKeyListener(this);
 
-        isSetupComplete = false;
-        selectedMap = "Germany";
         playerCount = 0;
         regionCount = 0;
 
@@ -72,6 +62,8 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
         regionBoxes.put("Teal", new Rectangle(1540, 590, 50, 50));
         regionBoxes.put("Brown", new Rectangle(1540, 680, 50, 50));
         regionBoxes.put("Purple", new Rectangle(1540, 770, 50, 50));
+
+        this.parent = parent;
     }
 
     @Override
@@ -88,9 +80,7 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     }
 
     private void drawPlayerSelectionScreen(Graphics2D g) {
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-        }
+        g.drawImage(ImageLibrary.background2, 0, 0, getWidth(), getHeight(), null);
         /*
         if (dec1Image != null){
             g.drawImage(dec1Image, -170, 620, 750, 450, null);
@@ -191,12 +181,8 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     }
 
     private void drawRegionSelectionScreen(Graphics2D g) {
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-        }
-        if (mapImage != null) {
-            g.drawImage(mapImage, 0, 0, getWidth()/2-148, getHeight(), null);
-        }
+        g.drawImage(ImageLibrary.background2, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(ImageLibrary.mapImage, 0, 0, getWidth()/2-148, getHeight(), null);
     
         // 1. Set the color for the inside of the box
         Color myYellow = new Color(255, 250, 191);
@@ -306,8 +292,7 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     private void handleRegionScreenClick(int x, int y) {
         for (String region : regionBoxes.keySet()) {
             Rectangle box = regionBoxes.get(region);
-
-            if (box.contains(x, y)) {
+            if (x > box.x - 10 && x < (box.x - 10) + ((box.width+10)/2*3) && y > box.y && y < (box.y) + ((box.height+10)/2*3)) {
                 if (GameState.mapGraph.getMapRegions().contains(region)) {
                     GameState.mapGraph.removeRegion(region);
                 } else {
@@ -325,18 +310,24 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
             }
         }
 
-        if (finishButton.contains(x, y)) {
+        if (x > finishButton.x + 100 && x < finishButton.x + 100 + finishButton.width && y > finishButton.y + 200 && y < finishButton.y + 200 + finishButton.height) {
             if (GameState.mapGraph.getMapRegions().size() == regionCount) {
+                System.out.println("here");
                 GameState.mapGraph.setRegions();
-                isSetupComplete = true;
 
-                JOptionPane.showMessageDialog(this,
-                        "Setup complete. The game will now continue.",
-                        "Setup Finished",
-                        JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(this,
+                //        "Setup complete. The game will now continue.",
+                //        "Setup Finished",
+                //        JOptionPane.INFORMATION_MESSAGE);
 
                 // later you can switch to the main game panel here
-                // PowerGridFrame.switchPanel("game");
+                GameState.roundManager.determinePlayerOrder();
+                GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+                GameState.roundManager.advancePhase();
+                setVisible(false);
+                parent.add(new AuctionPanel(parent));
+                parent.repaint();
+                parent.remove(this);
             } else {
                 JOptionPane.showMessageDialog(this,
                         "You must choose exactly " + regionCount + " regions.",
@@ -356,7 +347,6 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
                 repaint();
             } else if (choosingRegions && GameState.mapGraph.getMapRegions().size() == 4) {
                 GameState.mapGraph.setRegions();
-                isSetupComplete = true;
                 repaint();
             }
         }

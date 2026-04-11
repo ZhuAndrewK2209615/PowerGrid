@@ -25,8 +25,8 @@ public class Player implements Comparable<Player> {
 
     public Player(String name) {
         this.name = name;
-        this.color = Color.BLACK;
-        this.elektro = 9999;
+        this.color = GameState.playerColors.remove(0);
+        this.elektro = 50;
         this.ownedPlants = new ArrayList<>();
         this.ownedCities = new HashMap<>();
         this.resources = new HashMap<>();
@@ -211,10 +211,10 @@ public class Player implements Comparable<Player> {
         int otherHighest = (other.highestPowerPlant == null) ? -1 : other.highestPowerPlant.getPlantNumber();
 
         if (thisHighest > otherHighest) {
-            return 1;
+            return -1;
         }
         if (thisHighest < otherHighest) {
-            return -1;
+            return 1;
         }
 
         return 0;

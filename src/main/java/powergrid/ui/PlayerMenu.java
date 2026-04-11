@@ -76,6 +76,7 @@ public class PlayerMenu implements MouseListener{
         String s = "Bureaucracy";
         switch (GameState.roundManager.getPhase())
         {
+            case 2: action = "hosting an auction"; s = "Market phase"; break;
             case 3: action = "buying resources"; s = "Building Houses"; break;
             case 4: action = "building houses"; s = "Bureaucracy"; break;
             case 5: action = "powering houses"; s = "Auction"; break;

@@ -281,7 +281,7 @@ public class MapGraph {
     {
         mapRegions.remove(regionRemoved);
     }
-}
+
     public HashMap<City, ArrayList<Connection>> getMapGraph()
     {
         return mapGraph;

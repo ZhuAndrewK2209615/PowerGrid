@@ -18,7 +18,7 @@ public class MarketManager {
   }
 
 
-  public void setupMarket() throws IOException{ // adds 4 powerplants to each market type
+  public void setupMarket(){ // adds 4 powerplants to each market type
     plantDeck.initializeDeck();
     ArrayList<PowerPlant> entireChosen = new ArrayList<>();
 
@@ -46,6 +46,8 @@ public class MarketManager {
         toAdd = plantDeck.draw();
       }else return;
       addPlantToMarket(toAdd);  // uses helper method
+      Collections.sort(currentMarket);
+      Collections.sort(futureMarket);
     }
   }
 
@@ -70,27 +72,26 @@ public class MarketManager {
       return;
     }
 
-    int numToCheck = P.getPlantNumber();  // number of the plant
-    
-    for(int i =0; i<currentMarket.size(); i++){
-      if(currentMarket.get(i).getPlantNumber() < numToCheck){  // checks if we can fit a plant based of number of the plant in current market
-        currentMarket.add(i,P);
-        break; // ends the process here
-      } 
+    ArrayList<PowerPlant> allPlants = new ArrayList<>();
+    for(PowerPlant p: currentMarket)
+    {
+      allPlants.add(p);
     }
-
-    if(!currentMarket.contains(P)){  // if the plant was not added into currentMarket, add it to future Market
-      for(int i =0; i<futureMarket.size(); i++){
-        if(futureMarket.get(i).getPlantNumber() < numToCheck){ // checks if we can fit a plant based of number of the plant in current market
-          futureMarket.add(i,P);
-          break;
-        }
-      }
+    for(PowerPlant p: futureMarket)
+    {
+      allPlants.add(p);
     }
- 
-    if(!currentMarket.contains(P) && !futureMarket.contains(P)){  // if it was not added at all and there is still space left in the market,
-      // we add it to the end (just for precaution)
-      futureMarket.add(P);
+    allPlants.add(P);
+    Collections.sort(allPlants);
+    currentMarket.clear();
+    futureMarket.clear();
+    for(int i=0; i<4; i++)
+    {
+      currentMarket.add(allPlants.get(i));
+    }
+    for(int i=4; i<8; i++)
+    {
+      futureMarket.add(allPlants.get(i));
     }
   }
 

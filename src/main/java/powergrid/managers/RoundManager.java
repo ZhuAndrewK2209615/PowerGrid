@@ -10,6 +10,7 @@ public class RoundManager {
     private ArrayList<Player> playerOrder = new ArrayList<>();
 
     public void determinePlayerOrder() {
+        playerOrder.clear();
         for(Player p: GameState.players)
         {
             playerOrder.add(p);
@@ -27,7 +28,7 @@ public class RoundManager {
             phase=phase+1;
         }
         else {
-        phase =1;
+        phase = 2;
         }
         return phase;
     }

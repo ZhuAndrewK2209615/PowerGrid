@@ -15,7 +15,7 @@ public class Deck {
         discardedPlants = new TreeSet<>();
     }
 
-    public void initializeDeck() throws IOException //Only call this once number of players has been decided
+    public void initializeDeck() //Only call this once number of players has been decided
     {
         ArrayList<PowerPlant> initialPlants = new ArrayList<>();
         ArrayList<PowerPlant> futurePlants = new ArrayList<>();
