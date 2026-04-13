@@ -277,6 +277,7 @@ public class EndPanel extends JPanel implements MouseListener{
             {
                 if (!GameState.gameEnded)
                 {
+                    GameState.resourceMarket.refillResources();
                     GameState.roundManager.determinePlayerOrder();
                     GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                     GameState.roundManager.advancePhase();
