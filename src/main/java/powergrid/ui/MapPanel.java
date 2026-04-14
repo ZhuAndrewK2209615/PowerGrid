@@ -7,7 +7,7 @@ import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
 
-public class MapPanel extends JPanel implements MouseListener, KeyListener{
+public class MapPanel extends JPanel implements MouseListener{
     private City selectedCity;
     private Path shortestPath;
     private int panelX = 924;
@@ -19,8 +19,6 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
     private MarketUI marketUI;
     private PowerGridFrame parent;
     private InfoPreviews infoPreview;
-    private boolean isViewingInfo;
-    private boolean isViewingPlants;
 
     public MapPanel(PowerGridFrame parent)
     {
@@ -36,11 +34,10 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
         }
         this.parent = parent;
         infoPreview = new InfoPreviews(this);
-        isViewingInfo = false;
-        isViewingPlants = false;
         addMouseListener(this);
-        addKeyListener(this);
         addMouseListener(playerMenu);
+        addKeyListener(infoPreview);
+        addMouseListener(infoPreview);
     }
 
     public void paint(Graphics g)
@@ -48,13 +45,17 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
         super.paint(g);
         g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
         Graphics2D g2d = (Graphics2D)g;
-        if (isViewingInfo)
+        if (infoPreview.isPreviewingInfo)
         {
             infoPreview.drawInfoPreview(g2d);
         }
-        else if (isViewingPlants)
+        else if (infoPreview.isPreviewingAuction)
         {
             infoPreview.drawPowerPlants(g);
+        }
+        else if (infoPreview.isPreviewingDiscard)
+        {
+            infoPreview.drawDiscardPreview(g);
         }
         else
         {
@@ -74,7 +75,7 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
                 drawPrompt(g2d);
             }
             drawFinishButton(g2d);
-            drawInfoButtons(g2d);
+            infoPreview.drawInfoButtons(g2d);
         }
     }
 
@@ -139,21 +140,6 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
         g2d.drawString("Cancel", 1425, 875);
     }
 
-    public void drawInfoButtons(Graphics2D g2d)
-    {
-        g2d.setColor(new Color(255, 222, 89));
-        g2d.fillOval(1790, 950, 80, 80);
-        g2d.fillOval(1790, 855, 80, 80);
-        g2d.fillOval(1790, 760, 80, 80);
-        g2d.setColor(Color.BLACK);
-        g2d.drawOval(1790, 950, 80, 80);
-        g2d.drawOval(1790, 855, 80, 80);
-        g2d.drawOval(1790, 760, 80, 80);
-        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
-        g2d.drawImage(ImageLibrary.electricity, 1800, 865, 60, 60, null);
-        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
-    }
-
     public void drawPrompt(Graphics2D g2d)
     {
         g2d.setColor(new Color(229, 239, 244));
@@ -194,16 +180,16 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
         int x = e.getX();
         int y = e.getY();
         //Detect when the player clicks on a city on the map
-        if (GameState.mapGraph.getCity(x, y) != null)
+        if (GameState.mapGraph.getCity(x, y) != null && !infoPreview.isPreviewing)
         {
             selectedCity = GameState.mapGraph.getCity(x, y);
         }
-        if (selectedCity != null && GameState.mapGraph.validBuild(GameState.activePlayer, selectedCity))
+        if (selectedCity != null && GameState.mapGraph.validBuild(GameState.activePlayer, selectedCity) && !infoPreview.isPreviewing)
         {
             shortestPath = GameState.mapGraph.getShortestPath(GameState.activePlayer, selectedCity);
         }
         //Detect when the player clicks on "Confirm" or "Cancel"
-        if (selectedCity != null && x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 && y < panelY + panelHeight / 2 + 15)
+        if (selectedCity != null && x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 && y < panelY + panelHeight / 2 + 15 && !infoPreview.isPreviewing)
         {
             if (GameState.activePlayer.getElektro() >= shortestPath.getDistance())
             {
@@ -222,14 +208,14 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
                 }
             }
         }
-        if (x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 + (panelHeight / 2 - 35) && y < panelY + panelHeight)
+        if (x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 + (panelHeight / 2 - 35) && y < panelY + panelHeight && !infoPreview.isPreviewing)
         {
             selectedCity = null;
             shortestPath = null;
         }
 
         //detect when a player clicks the finish button
-        if (x > 1200 && x < 1520 && y > 981 && y < 1031)
+        if (x > 1200 && x < 1520 && y > 981 && y < 1031 && !infoPreview.isPreviewing)
         {
             Player next = GameState.roundManager.getNextPlayer();
             if (next != null)
@@ -245,21 +231,6 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
                 parent.add(new EndPanel(parent));
                 parent.repaint();
                 parent.remove(this);
-            }
-        }
-        if (x > 1790 && x < 1870)
-        {
-            if (y > 855 && y < 935)
-            {
-                isViewingPlants = true;
-            }
-            if (y > 950 && y < 1030)
-            {
-                isViewingInfo = true;
-            }
-            if (y > 760 && y < 840)
-            {
-                // isPreviewingDiscard = true;
             }
         }
         repaint();
@@ -290,27 +261,4 @@ public class MapPanel extends JPanel implements MouseListener, KeyListener{
         super.addNotify();
         requestFocus();
     }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        char c = e.getKeyChar();
-        if (c == 'r')
-        {
-            // isPreviewingMap = false;
-            isViewingInfo = false;
-            // isPreviewingDiscard = false;
-        }
-        repaint();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        
-    }
-    
 }

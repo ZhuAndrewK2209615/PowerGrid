@@ -9,7 +9,15 @@ public class PowerGridRunner {
     {
         GameState.startGame();
         //-------------------------------------------All code within these lines are for testing; should be removed before game is finalized-----------------------
-        
+        GameState.initializePlayers(3);
+        GameState.mapGraph.addRegion("Blue");
+        GameState.mapGraph.addRegion("Yellow");
+        GameState.mapGraph.addRegion("Purple");
+        GameState.mapGraph.setRegions();
+        GameState.roundManager.determinePlayerOrder();
+        GameState.roundManager.advancePhase();
+        GameState.roundManager.advancePhase();
+        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(2);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         //testing, remove this later

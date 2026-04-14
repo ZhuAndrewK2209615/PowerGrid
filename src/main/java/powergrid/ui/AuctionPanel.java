@@ -16,9 +16,6 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
     private boolean discardingPlant;
     private Player auctionWinner;
     private InfoPreviews infoPreview;
-    private boolean isPreviewingMap;
-    private boolean isPreviewingInfo;
-    private boolean isPreviewingDiscard;
 
     public AuctionPanel(PowerGridFrame parent)
     {
@@ -28,13 +25,12 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         }
         currentMarketPositions = new HashMap<>();
         this.parent = parent;
-        auctionStarted = false;
         infoPreview = new InfoPreviews(this);
-        isPreviewingMap = false;
-        isPreviewingInfo = false;
-        isPreviewingDiscard = false;
         addMouseListener(this);
+        addMouseListener(infoPreview);
+        addMouseListener(infoPreview.getPlayerMenu());
         addKeyListener(this);
+        addKeyListener(infoPreview);
     }
 
     public void paint(Graphics g)
@@ -42,13 +38,17 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         super.paint(g);
         Graphics2D g2d = (Graphics2D)g;
         g.drawImage(ImageLibrary.background2, 0, 0, getWidth(), getHeight(), null);
-        if (isPreviewingMap)
+        if (infoPreview.isPreviewingMap)
         {
             infoPreview.drawMapPreview(g);
         }
-        else if (isPreviewingInfo)
+        else if (infoPreview.isPreviewingInfo)
         {
             infoPreview.drawInfoPreview(g2d);
+        }
+        else if (infoPreview.isPreviewingDiscard)
+        {
+            infoPreview.drawDiscardPreview(g);
         }
         else
         {
@@ -56,7 +56,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
             if (!auctionStarted || (auctionWinner != null && !discardingPlant))
                 drawPrompt(g);
             drawDashboard(g);
-            drawInfoButtons(g);
+            infoPreview.drawInfoButtons(g);
             if (auctionStarted)
                 drawAuctionInfo(g);
         }
@@ -201,23 +201,6 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         g2d.drawString("'x': Pass Bid", getWidth() / 2 + 520, getHeight() - 30);
     }
 
-    public void drawInfoButtons(Graphics g)
-    {
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.setStroke(new BasicStroke(5));
-        g2d.setColor(new Color(255, 222, 89));
-        g2d.fillOval(1790, 950, 80, 80);
-        g2d.fillOval(1790, 855, 80, 80);
-        g2d.fillOval(1790, 760, 80, 80);
-        g2d.setColor(Color.BLACK);
-        g2d.drawOval(1790, 950, 80, 80);
-        g2d.drawOval(1790, 855, 80, 80);
-        g2d.drawOval(1790, 760, 80, 80);
-        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
-        g2d.drawImage(ImageLibrary.mapSymbol, 1800, 865, 60, 60, null);
-        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
-    }
-
 
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
@@ -226,7 +209,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         for(PowerPlant p: currentMarketPositions.keySet())
         {
             Pair pos = currentMarketPositions.get(p);
-            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && !isPreviewingMap)
+            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && !infoPreview.isPreviewing)
             {
                 GameState.auctionManager.startAuction(p);
                 auctionStarted = true;
@@ -234,31 +217,13 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         }
         //g2d.drawImage(ImageLibrary.upArrow, x - 7, getHeight() - 205, 50, 50, null);
         //g2d.drawImage(ImageLibrary.downArrow, x + 57, getHeight() - 205, 50, 50, null);
-        if (auctionStarted && x > upArrowX && x < upArrowX + 50 && y > getHeight() - 205 && y < getHeight() - 165 && !isPreviewingMap)
+        if (auctionStarted && x > upArrowX && x < upArrowX + 50 && y > getHeight() - 205 && y < getHeight() - 165 && !infoPreview.isPreviewing)
         {
             GameState.auctionManager.incrementPendingBid(true);
         }
-        if (auctionStarted && x > downArrowX && x < downArrowX + 50 && y > getHeight() - 205 && y < getHeight() - 165 && !isPreviewingMap)
+        if (auctionStarted && x > downArrowX && x < downArrowX + 50 && y > getHeight() - 205 && y < getHeight() - 165 && !infoPreview.isPreviewing)
         {
             GameState.auctionManager.incrementPendingBid(false);
-        }
-        //g2d.drawOval(1790, 950, 80, 80);
-        //g2d.drawOval(1790, 855, 80, 80);
-        //g2d.drawOval(1790, 760, 80, 80);
-        if (x > 1790 && x < 1870)
-        {
-            if (y > 855 && y < 935)
-            {
-                isPreviewingMap = true;
-            }
-            if (y > 950 && y < 1030)
-            {
-                isPreviewingInfo = true;
-            }
-            if (y > 760 && y < 840)
-            {
-                isPreviewingDiscard = true;
-            }
         }
         repaint();
     }
@@ -282,13 +247,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
     @Override
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
-        if (c == 'r')
-        {
-            isPreviewingMap = false;
-            isPreviewingInfo = false;
-            isPreviewingDiscard = false;
-        }
-        if (c == 'x' && !GameState.firstRound && !auctionStarted)
+        if (c == 'x' && !GameState.firstRound && !auctionStarted && !infoPreview.isPreviewing)
         {
             GameState.auctionManager.getActiveBidders().remove(0);
             if (!GameState.auctionManager.getActiveBidders().isEmpty())
@@ -303,13 +262,13 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
                 parent.remove(this);
             }
         }
-        if (c == 'x' && auctionStarted && auctionWinner == null && GameState.auctionManager.getHighestBidder() != null)
+        if (c == 'x' && auctionStarted && auctionWinner == null && GameState.auctionManager.getHighestBidder() != null && !infoPreview.isPreviewing)
         {
             GameState.auctionManager.getCurrentBidder().setPassedBid(true);
             GameState.auctionManager.setNextBidder();
             resolveAuction();
         }
-        if (c == 'c' && auctionStarted && auctionWinner == null)
+        if (c == 'c' && auctionStarted && auctionWinner == null && !infoPreview.isPreviewing)
         {
             GameState.auctionManager.confirmBid();
             GameState.auctionManager.setNextBidder();
@@ -345,12 +304,10 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (isPreviewingMap)
-            return;
         switch (e.getKeyCode())
         {
             case KeyEvent.VK_ENTER:
-                if (auctionWinner != null && !discardingPlant)
+                if (auctionWinner != null && !discardingPlant && !infoPreview.isPreviewing)
                 {
                     GameState.marketManager.removePlant(GameState.auctionManager.getCurrentPlant());
                     GameState.marketManager.refillMarket();

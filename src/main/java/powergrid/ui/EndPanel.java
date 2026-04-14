@@ -16,6 +16,7 @@ public class EndPanel extends JPanel implements MouseListener{
     private PlayerMenu playerMenu;
     private HashMap<Player, Integer> housesPowered;
     private Player winner;
+    private InfoPreviews infoPreview;
 
     public EndPanel(PowerGridFrame parent)
     {
@@ -24,6 +25,7 @@ public class EndPanel extends JPanel implements MouseListener{
         marketUI = new MarketUI(this);
         playerMenu = new PlayerMenu();
         housesPowered = new HashMap<>();
+        infoPreview = new InfoPreviews(this);
         winner = null;
         for(Player p: GameState.players)
         {
@@ -31,35 +33,54 @@ public class EndPanel extends JPanel implements MouseListener{
         }
         addMouseListener(this);
         addMouseListener(playerMenu);
+        addMouseListener(infoPreview);
+        addKeyListener(infoPreview);
     }
 
     public void paint(Graphics g)
     {
         super.paint(g);
+        Graphics2D g2d = (Graphics2D)g;
         g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
-        mapUI.drawMap(g);
-        marketUI.drawMarket(g);
-        playerMenu.drawMenu(g);
-        if (winner == null)
-            drawPowerButtons(g);
-        drawFinishButtons(g);
-        drawInfoButtons(g);
-        if (GameState.gameEnded)
+        if (infoPreview.isPreviewingAuction)
         {
+            infoPreview.drawPowerPlants(g);
+        }
+        else if (infoPreview.isPreviewingDiscard)
+        {
+            infoPreview.drawDiscardPreview(g);
+        }
+        else if (infoPreview.isPreviewingInfo)
+        {
+            infoPreview.drawInfoPreview(g2d);
+        }
+        else
+        {
+            mapUI.drawMap(g);
+            marketUI.drawMarket(g);
+            playerMenu.drawMenu(g);
             if (winner == null)
+                drawPowerButtons(g);
+            drawFinishButtons(g);
+            infoPreview.drawInfoButtons(g);
+            if (GameState.gameEnded)
             {
-                g.setFont(new Font("Arial", Font.BOLD, 20));
-                g.drawString(GameState.gameEndRequirement + " houses have been built by a player; the game has ended", 1100, 65);
-                g.drawString("Each player powers as many houses as possible", 1100, 105);
-            }
-            else
-            {
-                g.setFont(new Font("Arial", Font.BOLD, 35));
-                g.drawString(winner.getName() + " has won!", 1250, 80);
-                g.setColor(winner.getColor());
-                g.fillOval(960, 40, 75, 75);
+                if (winner == null)
+                {
+                    g.setFont(new Font("Arial", Font.BOLD, 20));
+                    g.drawString(GameState.gameEndRequirement + " houses have been built by a player; the game has ended", 1100, 65);
+                    g.drawString("Each player powers as many houses as possible", 1100, 105);
+                }
+                else
+                {
+                    g.setFont(new Font("Arial", Font.BOLD, 35));
+                    g.drawString(winner.getName() + " has won!", 1250, 80);
+                    g.setColor(winner.getColor());
+                    g.fillOval(960, 40, 75, 75);
+                }
             }
         }
+        
     }
 
     public void drawPowerButtons(Graphics g)
@@ -176,22 +197,6 @@ public class EndPanel extends JPanel implements MouseListener{
         
     }
 
-    public void drawInfoButtons(Graphics g)
-    {
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.setColor(new Color(255, 222, 89));
-        g2d.fillOval(1790, 950, 80, 80);
-        g2d.fillOval(1790, 855, 80, 80);
-        g2d.fillOval(1790, 760, 80, 80);
-        g2d.setColor(Color.BLACK);
-        g2d.drawOval(1790, 950, 80, 80);
-        g2d.drawOval(1790, 855, 80, 80);
-        g2d.drawOval(1790, 760, 80, 80);
-        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
-        g2d.drawImage(ImageLibrary.electricity, 1800, 865, 60, 60, null);
-        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
@@ -201,7 +206,7 @@ public class EndPanel extends JPanel implements MouseListener{
         for(int i=0; i<Math.min(3, GameState.activePlayer.getOwnedPlants().size()); i++)
         {
             PowerPlant currentPlant = GameState.activePlayer.getOwnedPlants().get(i);
-            if (x > tempX && x < tempX + 290 && y > 540 && y < 590 && winner == null)
+            if (x > tempX && x < tempX + 290 && y > 540 && y < 590 && winner == null && !infoPreview.isPreviewing)
             {
                 if (currentPlant.canPower() && !(currentPlant.getResourceType() == ResourceType.HYBRID && currentPlant.getQueuedResources().size() != currentPlant.getMaxCapacity() / 2))
                 {
@@ -211,7 +216,7 @@ public class EndPanel extends JPanel implements MouseListener{
 
                 }
             }
-            if (currentPlant.getResourceType() == ResourceType.HYBRID)
+            if (currentPlant.getResourceType() == ResourceType.HYBRID && !infoPreview.isPreviewing)
             {
                 int coalStored = 0;
                 int oilStored = 0;
@@ -254,7 +259,7 @@ public class EndPanel extends JPanel implements MouseListener{
             tempX += 315;
         }
         
-        if (x > 1350 && x < 1750 && y > getHeight() - 100 && y < getHeight() - 20 && winner == null)
+        if (x > 1350 && x < 1750 && y > getHeight() - 100 && y < getHeight() - 20 && winner == null && !infoPreview.isPreviewing)
         {
             for(PowerPlant p: GameState.activePlayer.getOwnedPlants())
             {
@@ -339,5 +344,11 @@ public class EndPanel extends JPanel implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
         
+    }
+
+    public void addNotify()
+    {
+        super.addNotify();
+        requestFocus();
     }
 }
