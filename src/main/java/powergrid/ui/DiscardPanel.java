@@ -9,12 +9,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 import powergrid.core.GameState;
+import powergrid.utils.PowerPlant;
+import powergrid.utils.ResourceType;
 
 public class DiscardPanel extends JPanel implements MouseInputListener {
 
@@ -180,6 +183,9 @@ public class DiscardPanel extends JPanel implements MouseInputListener {
             System.out.println("Powerplant section 1 clicked");
             togglePowerPlantSection(1);
             System.out.println("Number 1");
+            PowerPlant now = GameState.activePlayer.getOwnedPlants().get(0);
+            ArrayList <ResourceType> stored = now.getResourcesStored();  // resources stored
+
             
         }
         // powerplant section 2
