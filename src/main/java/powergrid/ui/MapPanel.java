@@ -7,7 +7,7 @@ import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
 
-public class MapPanel extends JPanel implements MouseListener{
+public class MapPanel extends JPanel implements MouseListener, KeyListener{
     private City selectedCity;
     private Path shortestPath;
     private int panelX = 924;
@@ -18,6 +18,9 @@ public class MapPanel extends JPanel implements MouseListener{
     private MapUI mapUI;
     private MarketUI marketUI;
     private PowerGridFrame parent;
+    private InfoPreviews infoPreview;
+    private boolean isViewingInfo;
+    private boolean isViewingPlants;
 
     public MapPanel(PowerGridFrame parent)
     {
@@ -32,7 +35,11 @@ public class MapPanel extends JPanel implements MouseListener{
             System.out.println("Failed to load an image");
         }
         this.parent = parent;
+        infoPreview = new InfoPreviews(this);
+        isViewingInfo = false;
+        isViewingPlants = false;
         addMouseListener(this);
+        addKeyListener(this);
         addMouseListener(playerMenu);
     }
 
@@ -41,24 +48,34 @@ public class MapPanel extends JPanel implements MouseListener{
         super.paint(g);
         g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
         Graphics2D g2d = (Graphics2D)g;
-        mapUI.drawMap(g);
-        if (selectedCity != null)
+        if (isViewingInfo)
         {
-            drawPath(g2d);
+            infoPreview.drawInfoPreview(g2d);
         }
-        marketUI.drawMarket(g);
-        playerMenu.drawMenu(g);
-        if (selectedCity != null)
+        else if (isViewingPlants)
         {
-            drawPathUI(g2d);
+            infoPreview.drawPowerPlants(g);
         }
         else
         {
-            drawPrompt(g2d);
+            mapUI.drawMap(g);
+            if (selectedCity != null)
+            {
+                drawPath(g2d);
+            }
+            marketUI.drawMarket(g);
+            playerMenu.drawMenu(g);
+            if (selectedCity != null)
+            {
+                drawPathUI(g2d);
+            }
+            else
+            {
+                drawPrompt(g2d);
+            }
+            drawFinishButton(g2d);
+            drawInfoButtons(g2d);
         }
-        drawFinishButton(g2d);
-        drawInfoButtons(g2d);
-        g.setColor(Color.RED);
     }
 
     public void drawPathUI(Graphics2D g2d)
@@ -230,6 +247,21 @@ public class MapPanel extends JPanel implements MouseListener{
                 parent.remove(this);
             }
         }
+        if (x > 1790 && x < 1870)
+        {
+            if (y > 855 && y < 935)
+            {
+                isViewingPlants = true;
+            }
+            if (y > 950 && y < 1030)
+            {
+                isViewingInfo = true;
+            }
+            if (y > 760 && y < 840)
+            {
+                // isPreviewingDiscard = true;
+            }
+        }
         repaint();
     }
 
@@ -257,6 +289,28 @@ public class MapPanel extends JPanel implements MouseListener{
     {
         super.addNotify();
         requestFocus();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c == 'r')
+        {
+            // isPreviewingMap = false;
+            isViewingInfo = false;
+            // isPreviewingDiscard = false;
+        }
+        repaint();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        
     }
     
 }

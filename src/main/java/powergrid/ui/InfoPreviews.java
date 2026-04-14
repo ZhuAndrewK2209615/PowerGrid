@@ -2,6 +2,7 @@ package powergrid.ui;
 import java.awt.*;
 import javax.swing.*;
 import powergrid.core.*;
+import powergrid.utils.PowerPlant;
 
 public class InfoPreviews {
     
@@ -59,5 +60,31 @@ public class InfoPreviews {
         g.setColor(Color.BLACK);
         g.setFont(new Font("Serif", Font.BOLD, 58));
         g.drawString("Press  'r'  to  return",680, 110);
+    }
+
+    public void drawPowerPlants(Graphics g)
+    {
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.setColor(new Color(0, 191, 99));
+        int x = 377;
+        for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+        {
+            g2d.drawImage(p.getImage(), x, 60, 250, 250, null);
+            x += 300;
+        }
+        g2d.setStroke(new BasicStroke(15));
+        g2d.setColor(Color.BLACK);
+        x = 0;
+        while (x < origin.getWidth())
+        {
+            g2d.drawLine(x, 350, x + 75, 350);
+            x += 125;
+        }
+        x = 377;
+        for(PowerPlant p: GameState.marketManager.getFutureMarket())
+        {
+            g2d.drawImage(p.getImage(), x, 370, 250, 250, null);
+            x += 300;
+        }
     }
 }
