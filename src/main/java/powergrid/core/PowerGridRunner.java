@@ -16,8 +16,21 @@ public class PowerGridRunner {
         GameState.mapGraph.setRegions();
         GameState.roundManager.determinePlayerOrder();
         GameState.roundManager.advancePhase();
-        GameState.roundManager.advancePhase();
-        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(2);
+        GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
+        for(Player p: GameState.players)
+        {
+            for(int i=0; i<3; i++)
+            {
+                p.addPowerPlant(GameState.marketManager.getDeck().draw());
+                for (ResourceType r: GameState.resourceMarket.getStockMap().keySet())
+                {
+                    for(int j=0; j<2; j++)
+                    {
+                        p.getOwnedPlants().get(i).addResource(r);
+                    }
+                }
+            }
+        }
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         //testing, remove this later

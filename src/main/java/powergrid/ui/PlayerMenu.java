@@ -12,7 +12,7 @@ public class PlayerMenu implements MouseListener{
     public boolean menuEnabled = true;
     public boolean isBuying = false;
     public Player viewedPlayer;
-    private HashMap<ResourceType, BufferedImage> resourcesImages = new HashMap<>();
+    public static HashMap<ResourceType, BufferedImage> resourcesImages = new HashMap<>();
     private HashMap<ResourceType, ArrayList<Pair>> resourcePositions = new HashMap<>();
     private HashMap<PowerPlant, Pair> powerPlantPositions = new HashMap<>();
     private ResourceType selectedResource = null;

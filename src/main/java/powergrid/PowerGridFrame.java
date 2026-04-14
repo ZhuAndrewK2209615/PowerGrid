@@ -12,7 +12,7 @@ public class PowerGridFrame extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setResizable(false);
-        add(new marketPanel(this));
+        add(new AuctionPanel(this));
         setVisible(true);
     }
 }
