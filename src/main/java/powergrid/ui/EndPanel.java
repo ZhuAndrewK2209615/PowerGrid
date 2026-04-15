@@ -287,6 +287,20 @@ public class EndPanel extends JPanel implements MouseListener{
                     GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                     GameState.roundManager.advancePhase();
                     GameState.firstRound = false;
+                    if (GameState.step < 3)
+                    {
+                        PowerPlant highest = GameState.marketManager.getFutureMarket().remove(GameState.marketManager.getFutureMarket().size()-1);
+                        GameState.marketManager.refillMarket();
+                        GameState.marketManager.getDeck().addToBottom(highest);
+                    }
+                    else
+                    {
+                        GameState.marketManager.discardLowestPlant();
+                    }
+                    if (GameState.marketManager.containsStep3())
+                    {
+                        GameState.triggerPhase3();
+                    }
                     setVisible(false);
                     parent.add(new AuctionPanel(parent));
                     parent.repaint();

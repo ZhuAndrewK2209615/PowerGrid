@@ -15,13 +15,13 @@ public class ResourceMarket {
         //initialize currentStock
         currentStock.put(ResourceType.COAL, 24);
         currentStock.put(ResourceType.OIL, 18);
-        currentStock.put(ResourceType.GARBAGE, 6);
+        currentStock.put(ResourceType.GARBAGE, 9);
         currentStock.put(ResourceType.URANIUM, 2);
 
         //initialize availableTokens
         availableTokens.put(ResourceType.COAL, 0);
         availableTokens.put(ResourceType.OIL, 6);
-        availableTokens.put(ResourceType.GARBAGE, 18);
+        availableTokens.put(ResourceType.GARBAGE, 15);
         availableTokens.put(ResourceType.URANIUM, 10);
     }
 
@@ -84,7 +84,7 @@ public class ResourceMarket {
             int maxRestock = Math.min(GameState.refillData.get(GameState.players.size()).get(GameState.step).get(i), 24 - currentStock.get(order[i]));
             int totalRestock = Math.min(availableForRestock, maxRestock);
             availableTokens.put(order[i], availableTokens.get(order[i]) - totalRestock);
-            currentStock.put(order[i], currentStock.get(order[i]) - totalRestock);
+            currentStock.put(order[i], currentStock.get(order[i]) + totalRestock);
         }
     }
 
@@ -101,5 +101,10 @@ public class ResourceMarket {
     public HashMap<ResourceType, Integer> getStockMap()
     {
         return currentStock;
+    }
+
+    public void addToSupply(ResourceType r)
+    {
+        availableTokens.put(r, availableTokens.get(r) + 1);
     }
 }

@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.*;
 import powergrid.core.*;
 
 public class SetupPanel extends JPanel implements MouseListener, KeyListener {
@@ -322,6 +322,7 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
 
                 // later you can switch to the main game panel here
                 GameState.roundManager.determinePlayerOrder();
+                Collections.shuffle(GameState.roundManager.getPlayerOrder());
                 GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                 GameState.roundManager.advancePhase();
                 setVisible(false);

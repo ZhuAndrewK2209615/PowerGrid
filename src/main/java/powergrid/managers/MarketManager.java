@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import powergrid.utils.PowerPlant;
 import java.io.*;
+import powergrid.core.*;
 
 // one private specifc to class helper method: STEP 3 HAS NOT BEEN INITIATED
 
@@ -85,13 +86,23 @@ public class MarketManager {
     Collections.sort(allPlants);
     currentMarket.clear();
     futureMarket.clear();
-    for(int i=0; i<4; i++)
+    if (GameState.step < 3)
     {
-      currentMarket.add(allPlants.get(i));
+      for(int i=0; i<4; i++)
+      {
+        currentMarket.add(allPlants.get(i));
+      }
+      for(int i=4; i<8; i++)
+      {
+        futureMarket.add(allPlants.get(i));
+      }
     }
-    for(int i=4; i<8; i++)
+    else
     {
-      futureMarket.add(allPlants.get(i));
+      for(PowerPlant p: allPlants)
+      {
+        currentMarket.add(p);
+      }
     }
   }
 
@@ -108,6 +119,19 @@ public class MarketManager {
   public Deck getDeck()
   {
     return plantDeck;
+  }
+
+  public void discardLowestPlant()
+  {
+    plantDeck.getDiscardedPlants().add(removePlant(currentMarket.get(0)));
+    refillMarket();
+  }
+
+  public boolean containsStep3()
+  {
+    if (futureMarket.get(futureMarket.size() - 1).getPlantNumber() == 999)
+      return true;
+    return false;
   }
 
 }

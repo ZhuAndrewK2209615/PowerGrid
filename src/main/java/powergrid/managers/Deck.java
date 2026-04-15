@@ -84,7 +84,18 @@ public class Deck {
     
     public PowerPlant draw()
     {
-        return powerPlants.pop();
+        PowerPlant plant = powerPlants.pop();
+        int highestCities = 0;
+        for(Player p: GameState.players)
+        {
+            highestCities = Math.max(p.getCitiesBuilt().size(), highestCities);
+        }
+        while (plant.getPlantNumber() <= highestCities)
+        {
+            discardedPlants.add(plant);
+            plant = powerPlants.pop();
+        }
+        return plant;
     }
 
     @Override
@@ -96,5 +107,10 @@ public class Deck {
     public TreeSet<PowerPlant> getDiscardedPlants()
     {
         return discardedPlants;
+    }
+
+    public void addToBottom(PowerPlant p)
+    {
+        powerPlants.addLast(p);
     }
 }

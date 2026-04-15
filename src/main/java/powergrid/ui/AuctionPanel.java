@@ -20,6 +20,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
     private ArrayList<ResourceType> discardedResources = new ArrayList<>();
     private ResourceType selectedResource = null;
     private int selectedResourceIndex = -1;
+    private boolean boughtPowerPlant = false;
 
     public AuctionPanel(PowerGridFrame parent)
     {
@@ -322,37 +323,69 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
     {
         Graphics2D g2d = (Graphics2D)g;
         currentMarketPositions.clear();
-        g2d.setColor(new Color(0, 191, 99));
-        int x = 377;
-        for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+        if (GameState.step < 3)
         {
-            if (!auctionStarted)
-                g2d.fillRoundRect(x - 10, 50, 270, 270, 10, 10);
-            else
+            g2d.setColor(new Color(0, 191, 99));
+            int x = 377;
+            for(PowerPlant p: GameState.marketManager.getCurrentMarket())
             {
-                if (p.equals(GameState.auctionManager.getCurrentPlant()))
-                {
-                    g2d.setColor(new Color(255, 222, 89));
+                if (!auctionStarted && p.getPlantNumber() <= GameState.activePlayer.getElektro())
                     g2d.fillRoundRect(x - 10, 50, 270, 270, 10, 10);
+                else
+                {
+                    if (p.equals(GameState.auctionManager.getCurrentPlant()))
+                    {
+                        g2d.setColor(new Color(255, 222, 89));
+                        g2d.fillRoundRect(x - 10, 50, 270, 270, 10, 10);
+                    }
+                }
+                g2d.drawImage(p.getImage(), x, 60, 250, 250, null);
+                currentMarketPositions.put(p, new Pair(x, 60));
+                x += 300;
+            }
+            g2d.setStroke(new BasicStroke(15));
+            g2d.setColor(Color.BLACK);
+            x = 0;
+            while (x < getWidth())
+            {
+                g2d.drawLine(x, 350, x + 75, 350);
+                x += 125;
+            }
+            x = 377;
+            for(PowerPlant p: GameState.marketManager.getFutureMarket())
+            {
+                g2d.drawImage(p.getImage(), x, 370, 250, 250, null);
+                x += 300;
+            }
+        }
+        else
+        {
+            g2d.setColor(new Color(0, 191, 99));
+            int x = 510;
+            int y = 50;
+            int count = 0;
+            for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+            {
+                if (!auctionStarted && p.getPlantNumber() <= GameState.activePlayer.getElektro())
+                    g2d.fillRoundRect(x - 10, y - 10, 270, 270, 10, 10);
+                else
+                {
+                    if (p.equals(GameState.auctionManager.getCurrentPlant()))
+                    {
+                        g2d.setColor(new Color(255, 222, 89));
+                        g2d.fillRoundRect(x - 10, y - 10, 270, 270, 10, 10);
+                    }
+                }
+                g2d.drawImage(p.getImage(), x, y, 250, 250, null);
+                currentMarketPositions.put(p, new Pair(x, y));
+                x += 300;
+                count++;
+                if (count == 3)
+                {
+                    x = 510;
+                    y = 370;
                 }
             }
-            g2d.drawImage(p.getImage(), x, 60, 250, 250, null);
-            currentMarketPositions.put(p, new Pair(x, 60));
-            x += 300;
-        }
-        g2d.setStroke(new BasicStroke(15));
-        g2d.setColor(Color.BLACK);
-        x = 0;
-        while (x < getWidth())
-        {
-            g2d.drawLine(x, 350, x + 75, 350);
-            x += 125;
-        }
-        x = 377;
-        for(PowerPlant p: GameState.marketManager.getFutureMarket())
-        {
-            g2d.drawImage(p.getImage(), x, 370, 250, 250, null);
-            x += 300;
         }
     }
 
@@ -465,7 +498,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         for(PowerPlant p: currentMarketPositions.keySet())
         {
             Pair pos = currentMarketPositions.get(p);
-            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && !infoPreview.isPreviewing)
+            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && p.getPlantNumber() <= GameState.activePlayer.getElektro() && !infoPreview.isPreviewing)
             {
                 GameState.auctionManager.startAuction(p);
                 auctionStarted = true;
@@ -481,7 +514,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         {
             GameState.auctionManager.incrementPendingBid(false);
         }
-        if (discardingPlant)
+        if (discardingPlant && !infoPreview.isPreviewing)
         {
             if ((x >= 935 - 420 && x <= 935 - 420 + 290) && (y >= 213 && y <= 213 + 275)) {
             //togglePowerPlantSection(1);
@@ -625,6 +658,14 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
             {
                 GameState.roundManager.advancePhase();
                 GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(GameState.players.size() - 1);
+                if (!boughtPowerPlant)
+                {
+                    GameState.marketManager.discardLowestPlant();
+                }
+                if (GameState.marketManager.containsStep3())
+                {
+                    GameState.triggerPhase3();
+                }
                 setVisible(false);
                 parent.add(new marketPanel(parent));
                 parent.repaint();
@@ -669,6 +710,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         {
             discardingPlant = true;
         }
+        boughtPowerPlant = true;
     }
 
     @Override
@@ -706,6 +748,14 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
             {
                 GameState.firstRound = false;
                 GameState.roundManager.determinePlayerOrder();
+            }
+            if (!boughtPowerPlant)
+            {
+                GameState.marketManager.discardLowestPlant();
+            }
+            if (GameState.marketManager.containsStep3())
+            {
+                GameState.triggerPhase3();
             }
             GameState.roundManager.advancePhase();
             GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(GameState.players.size() - 1);

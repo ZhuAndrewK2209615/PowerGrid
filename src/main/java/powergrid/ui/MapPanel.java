@@ -188,6 +188,10 @@ public class MapPanel extends JPanel implements MouseListener{
         {
             shortestPath = GameState.mapGraph.getShortestPath(GameState.activePlayer, selectedCity);
         }
+        else
+        {
+            selectedCity = null;
+        }
         //Detect when the player clicks on "Confirm" or "Cancel"
         if (selectedCity != null && x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 && y < panelY + panelHeight / 2 + 15 && !infoPreview.isPreviewing)
         {
@@ -198,9 +202,9 @@ public class MapPanel extends JPanel implements MouseListener{
                 GameState.activePlayer.spendElektro(shortestPath.getDistance());
                 selectedCity = null;
                 shortestPath = null;
-                if (GameState.activePlayer.getCitiesBuilt().size() == GameState.phase2Requirement && GameState.step == 1)
+                if (GameState.marketManager.getCurrentMarket().get(0).getPlantNumber() <= GameState.activePlayer.getCitiesBuilt().size())
                 {
-                    GameState.triggerPhase2();
+                    GameState.marketManager.discardLowestPlant();
                 }
                 if (GameState.activePlayer.getCitiesBuilt().size() == GameState.gameEndRequirement)
                 {
@@ -227,6 +231,17 @@ public class MapPanel extends JPanel implements MouseListener{
             {
                 GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                 GameState.roundManager.advancePhase();
+                int highestHouses = 0;
+                for(Player p: GameState.players)
+                {
+                    highestHouses = Math.max(highestHouses, p.getCitiesBuilt().size());
+                }
+                if (GameState.marketManager.containsStep3())
+                {
+                    GameState.triggerPhase3();
+                }
+                if (highestHouses >= GameState.phase2Requirement && GameState.step == 1)
+                    GameState.triggerPhase2();
                 setVisible(false);
                 parent.add(new EndPanel(parent));
                 parent.repaint();

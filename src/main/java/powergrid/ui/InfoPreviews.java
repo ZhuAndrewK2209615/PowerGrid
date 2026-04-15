@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.*;
 import powergrid.core.*;
+import powergrid.utils.Pair;
 import powergrid.utils.PowerPlant;
 
 public class InfoPreviews implements KeyListener, MouseListener{
@@ -125,33 +126,58 @@ public class InfoPreviews implements KeyListener, MouseListener{
     {
         Color myYellow = new Color(255, 250, 191);
         Graphics2D g2d = (Graphics2D)g;
-        g2d.setStroke(new BasicStroke(5));
-        g2d.setColor(myYellow);
-        g2d.fillRect(350, 40, 1200, 290);
-        g2d.fillRect(350, 370, 1200, 290);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRect(350, 40, 1200, 290);
-        g2d.drawRect(350, 370, 1200, 290);
-        g2d.setColor(new Color(0, 191, 99));
-        int x = 377;
-        for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+        if (GameState.step < 3)
         {
-            g2d.drawImage(p.getImage(), x, 60, 250, 250, null);
-            x += 300;
+            g2d.setStroke(new BasicStroke(5));
+            g2d.setColor(myYellow);
+            g2d.fillRect(350, 40, 1200, 290);
+            g2d.fillRect(350, 370, 1200, 290);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRect(350, 40, 1200, 290);
+            g2d.drawRect(350, 370, 1200, 290);
+            g2d.setColor(new Color(0, 191, 99));
+            int x = 377;
+            for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+            {
+                g2d.drawImage(p.getImage(), x, 60, 250, 250, null);
+                x += 300;
+            }
+            g2d.setStroke(new BasicStroke(15));
+            g2d.setColor(Color.BLACK);
+            x = 0;
+            while (x < origin.getWidth())
+            {
+                g2d.drawLine(x, 350, x + 75, 350);
+                x += 125;
+            }
+            x = 377;
+            for(PowerPlant p: GameState.marketManager.getFutureMarket())
+            {
+                g2d.drawImage(p.getImage(), x, 385, 250, 250, null);
+                x += 300;
+            }
         }
-        g2d.setStroke(new BasicStroke(15));
-        g2d.setColor(Color.BLACK);
-        x = 0;
-        while (x < origin.getWidth())
+        else
         {
-            g2d.drawLine(x, 350, x + 75, 350);
-            x += 125;
-        }
-        x = 377;
-        for(PowerPlant p: GameState.marketManager.getFutureMarket())
-        {
-            g2d.drawImage(p.getImage(), x, 385, 250, 250, null);
-            x += 300;
+            g2d.setStroke(new BasicStroke(5));
+            g2d.setColor(myYellow);
+            g2d.fillRect(490, 40, 900, 600);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRect(490, 40, 900, 600);
+            int x = 510;
+            int y = 50;
+            int count = 0;
+            for(PowerPlant p: GameState.marketManager.getCurrentMarket())
+            {
+                g2d.drawImage(p.getImage(), x, y, 250, 250, null);
+                x += 300;
+                count++;
+                if (count == 3)
+                {
+                    x = 510;
+                    y = 370;
+                }
+            }
         }
         
         g2d.setColor(myYellow);

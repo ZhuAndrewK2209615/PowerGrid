@@ -53,6 +53,13 @@ public class AuctionManager {
       currentBid = pendingBid;
       highestBidder = currentBidder;
       pendingBid = currentBid + 1;
+      for(Player p: activePlayers)
+      {
+        if (p.getElektro() <= currentBid)
+        {
+          p.setPassedBid(true);
+        }
+      }
     }
 
     public void resetAuction()

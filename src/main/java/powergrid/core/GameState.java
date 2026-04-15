@@ -116,7 +116,17 @@ public class GameState {
     public static void triggerPhase2()
     {
         step = 2;
-        marketManager.removePlant(marketManager.getCurrentMarket().get(0));
-        marketManager.refillMarket();
+        marketManager.discardLowestPlant();
+    }
+
+    public static void triggerPhase3()
+    {
+        step = 3;
+        marketManager.getDeck().getDiscardedPlants().add(marketManager.getCurrentMarket().remove(0));
+        marketManager.getDeck().getDiscardedPlants().add(marketManager.getFutureMarket().remove(marketManager.getFutureMarket().size()-1));
+        while (marketManager.getFutureMarket().size() > 0)
+        {
+            marketManager.getCurrentMarket().add(marketManager.getFutureMarket().remove(0));
+        }
     }
 }
