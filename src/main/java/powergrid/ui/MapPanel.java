@@ -18,6 +18,7 @@ public class MapPanel extends JPanel implements MouseListener{
     private MapUI mapUI;
     private MarketUI marketUI;
     private PowerGridFrame parent;
+    private InfoPreviews infoPreview;
 
     public MapPanel(PowerGridFrame parent)
     {
@@ -32,8 +33,11 @@ public class MapPanel extends JPanel implements MouseListener{
             System.out.println("Failed to load an image");
         }
         this.parent = parent;
+        infoPreview = new InfoPreviews(this);
         addMouseListener(this);
         addMouseListener(playerMenu);
+        addKeyListener(infoPreview);
+        addMouseListener(infoPreview);
     }
 
     public void paint(Graphics g)
@@ -41,24 +45,38 @@ public class MapPanel extends JPanel implements MouseListener{
         super.paint(g);
         g.drawImage(ImageLibrary.background, 0, 0, getWidth(), getHeight(), null);
         Graphics2D g2d = (Graphics2D)g;
-        mapUI.drawMap(g);
-        if (selectedCity != null)
+        if (infoPreview.isPreviewingInfo)
         {
-            drawPath(g2d);
+            infoPreview.drawInfoPreview(g2d);
         }
-        marketUI.drawMarket(g);
-        playerMenu.drawMenu(g);
-        if (selectedCity != null)
+        else if (infoPreview.isPreviewingAuction)
         {
-            drawPathUI(g2d);
+            infoPreview.drawPowerPlants(g);
+        }
+        else if (infoPreview.isPreviewingDiscard)
+        {
+            infoPreview.drawDiscardPreview(g);
         }
         else
         {
-            drawPrompt(g2d);
+            mapUI.drawMap(g);
+            if (selectedCity != null)
+            {
+                drawPath(g2d);
+            }
+            marketUI.drawMarket(g);
+            playerMenu.drawMenu(g);
+            if (selectedCity != null)
+            {
+                drawPathUI(g2d);
+            }
+            else
+            {
+                drawPrompt(g2d);
+            }
+            drawFinishButton(g2d);
+            infoPreview.drawInfoButtons(g2d);
         }
-        drawFinishButton(g2d);
-        drawInfoButtons(g2d);
-        g.setColor(Color.RED);
     }
 
     public void drawPathUI(Graphics2D g2d)
@@ -122,21 +140,6 @@ public class MapPanel extends JPanel implements MouseListener{
         g2d.drawString("Cancel", 1425, 875);
     }
 
-    public void drawInfoButtons(Graphics2D g2d)
-    {
-        g2d.setColor(new Color(255, 222, 89));
-        g2d.fillOval(1790, 950, 80, 80);
-        g2d.fillOval(1790, 855, 80, 80);
-        g2d.fillOval(1790, 760, 80, 80);
-        g2d.setColor(Color.BLACK);
-        g2d.drawOval(1790, 950, 80, 80);
-        g2d.drawOval(1790, 855, 80, 80);
-        g2d.drawOval(1790, 760, 80, 80);
-        g2d.drawImage(ImageLibrary.questionMark, 1800, 960, 60, 60, null);
-        g2d.drawImage(ImageLibrary.electricity, 1800, 865, 60, 60, null);
-        g2d.drawImage(ImageLibrary.garbage, 1800, 770, 60, 60, null);
-    }
-
     public void drawPrompt(Graphics2D g2d)
     {
         g2d.setColor(new Color(229, 239, 244));
@@ -177,16 +180,20 @@ public class MapPanel extends JPanel implements MouseListener{
         int x = e.getX();
         int y = e.getY();
         //Detect when the player clicks on a city on the map
-        if (GameState.mapGraph.getCity(x, y) != null)
+        if (GameState.mapGraph.getCity(x, y) != null && !infoPreview.isPreviewing)
         {
             selectedCity = GameState.mapGraph.getCity(x, y);
         }
-        if (selectedCity != null && GameState.mapGraph.validBuild(GameState.activePlayer, selectedCity))
+        if (selectedCity != null && GameState.mapGraph.validBuild(GameState.activePlayer, selectedCity) && !infoPreview.isPreviewing)
         {
             shortestPath = GameState.mapGraph.getShortestPath(GameState.activePlayer, selectedCity);
         }
+        else
+        {
+            selectedCity = null;
+        }
         //Detect when the player clicks on "Confirm" or "Cancel"
-        if (selectedCity != null && x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 && y < panelY + panelHeight / 2 + 15)
+        if (selectedCity != null && x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 && y < panelY + panelHeight / 2 + 15 && !infoPreview.isPreviewing)
         {
             if (GameState.activePlayer.getElektro() >= shortestPath.getDistance())
             {
@@ -195,9 +202,9 @@ public class MapPanel extends JPanel implements MouseListener{
                 GameState.activePlayer.spendElektro(shortestPath.getDistance());
                 selectedCity = null;
                 shortestPath = null;
-                if (GameState.activePlayer.getCitiesBuilt().size() == GameState.phase2Requirement && GameState.step == 1)
+                if (GameState.marketManager.getCurrentMarket().get(0).getPlantNumber() <= GameState.activePlayer.getCitiesBuilt().size())
                 {
-                    GameState.triggerPhase2();
+                    GameState.marketManager.discardLowestPlant();
                 }
                 if (GameState.activePlayer.getCitiesBuilt().size() == GameState.gameEndRequirement)
                 {
@@ -205,14 +212,14 @@ public class MapPanel extends JPanel implements MouseListener{
                 }
             }
         }
-        if (x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 + (panelHeight / 2 - 35) && y < panelY + panelHeight)
+        if (x > panelX + panelWidth / 2 && x < panelX + panelWidth && y > panelY + 50 + (panelHeight / 2 - 35) && y < panelY + panelHeight && !infoPreview.isPreviewing)
         {
             selectedCity = null;
             shortestPath = null;
         }
 
         //detect when a player clicks the finish button
-        if (x > 1200 && x < 1520 && y > 981 && y < 1031)
+        if (x > 1200 && x < 1520 && y > 981 && y < 1031 && !infoPreview.isPreviewing)
         {
             Player next = GameState.roundManager.getNextPlayer();
             if (next != null)
@@ -224,6 +231,17 @@ public class MapPanel extends JPanel implements MouseListener{
             {
                 GameState.activePlayer = GameState.roundManager.getPlayerOrder().get(0);
                 GameState.roundManager.advancePhase();
+                int highestHouses = 0;
+                for(Player p: GameState.players)
+                {
+                    highestHouses = Math.max(highestHouses, p.getCitiesBuilt().size());
+                }
+                if (GameState.marketManager.containsStep3())
+                {
+                    GameState.triggerPhase3();
+                }
+                if (highestHouses >= GameState.phase2Requirement && GameState.step == 1)
+                    GameState.triggerPhase2();
                 setVisible(false);
                 parent.add(new EndPanel(parent));
                 parent.repaint();
@@ -258,5 +276,4 @@ public class MapPanel extends JPanel implements MouseListener{
         super.addNotify();
         requestFocus();
     }
-    
 }

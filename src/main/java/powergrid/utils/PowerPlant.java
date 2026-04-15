@@ -2,6 +2,7 @@ package powergrid.utils;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.imageio.*;
+import powergrid.core.*;
 
 public class PowerPlant implements Comparable<PowerPlant>{
     private int plantNumber;
@@ -42,7 +43,8 @@ public class PowerPlant implements Comparable<PowerPlant>{
             {
                 for(int i=0; i<resourceCost; i++)
                 {
-                    resourcesStored.remove(0);
+                    ResourceType r = resourcesStored.remove(0);
+                    GameState.resourceMarket.addToSupply(r);
                 }
             }
             else
@@ -50,6 +52,7 @@ public class PowerPlant implements Comparable<PowerPlant>{
                 for(int i=0; i<queuedResources.size(); i++)
                 {
                     resourcesStored.remove(queuedResources.get(i));
+                    GameState.resourceMarket.addToSupply(queuedResources.get(i));
                 }
             }
             isPowered = true;

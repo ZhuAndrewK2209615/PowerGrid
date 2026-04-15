@@ -1,8 +1,7 @@
 package powergrid.managers;
-import java.io.*;
 import java.util.*;
-import powergrid.utils.*;
 import powergrid.core.*;
+import powergrid.utils.*;
 
 public class Deck {
     
@@ -85,12 +84,33 @@ public class Deck {
     
     public PowerPlant draw()
     {
-        return powerPlants.pop();
+        PowerPlant plant = powerPlants.pop();
+        int highestCities = 0;
+        for(Player p: GameState.players)
+        {
+            highestCities = Math.max(p.getCitiesBuilt().size(), highestCities);
+        }
+        while (plant.getPlantNumber() <= highestCities)
+        {
+            discardedPlants.add(plant);
+            plant = powerPlants.pop();
+        }
+        return plant;
     }
 
     @Override
     public String toString()
     {
         return powerPlants.toString();
+    }
+
+    public TreeSet<PowerPlant> getDiscardedPlants()
+    {
+        return discardedPlants;
+    }
+
+    public void addToBottom(PowerPlant p)
+    {
+        powerPlants.addLast(p);
     }
 }

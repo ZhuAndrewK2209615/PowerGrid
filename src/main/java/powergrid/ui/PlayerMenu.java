@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
-import javax.imageio.ImageIO;
 import powergrid.core.*;
 import powergrid.utils.*;
 
@@ -13,7 +12,7 @@ public class PlayerMenu implements MouseListener{
     public boolean menuEnabled = true;
     public boolean isBuying = false;
     public Player viewedPlayer;
-    private HashMap<ResourceType, BufferedImage> resourcesImages = new HashMap<>();
+    public static HashMap<ResourceType, BufferedImage> resourcesImages = new HashMap<>();
     private HashMap<ResourceType, ArrayList<Pair>> resourcePositions = new HashMap<>();
     private HashMap<PowerPlant, Pair> powerPlantPositions = new HashMap<>();
     private ResourceType selectedResource = null;
@@ -167,7 +166,6 @@ public class PlayerMenu implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        
         if (!menuEnabled)
             return;
         if (selectedResource == null)

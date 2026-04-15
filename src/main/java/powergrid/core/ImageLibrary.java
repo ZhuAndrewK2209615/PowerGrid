@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 
 public class ImageLibrary {
     
-    public static BufferedImage background, background2, mapImage, marketImage, turnOrderCard, coal, oil, garbage, uranium, electricity, leftArrow, rightArrow, upArrow, downArrow, x, mapSymbol, questionMark;
+    public static BufferedImage background, background2, mapImage, marketImage, turnOrderCard, paymentCard, restockCard, coal, oil, garbage, uranium, electricity, leftArrow, rightArrow, upArrow, downArrow, x, mapSymbol, questionMark;
 
     public static void loadImages()
     {
@@ -27,6 +27,8 @@ public class ImageLibrary {
             x = ImageIO.read(ImageLibrary.class.getResource("/powergrid/Images/X.png"));
             mapSymbol = ImageIO.read(ImageLibrary.class.getResource("/powergrid/Images/MapSymbol.png"));
             questionMark = ImageIO.read(ImageLibrary.class.getResource("/powergrid/Images/QuestionSymbol.png"));
+            paymentCard = ImageIO.read(ImageLibrary.class.getResource("/powergrid/Images/PaymentCard.png"));
+            restockCard = ImageIO.read(ImageLibrary.class.getResource("/powergrid/Images/RestockCard.png"));
         }
         catch (Exception e)
         {
