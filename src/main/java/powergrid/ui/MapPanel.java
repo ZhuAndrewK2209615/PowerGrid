@@ -198,7 +198,6 @@ public class MapPanel extends JPanel implements MouseListener{
             if (GameState.activePlayer.getElektro() >= shortestPath.getDistance())
             {
                 GameState.activePlayer.addCity(selectedCity);
-                selectedCity.addOwner(GameState.activePlayer);
                 GameState.activePlayer.spendElektro(shortestPath.getDistance());
                 selectedCity = null;
                 shortestPath = null;
