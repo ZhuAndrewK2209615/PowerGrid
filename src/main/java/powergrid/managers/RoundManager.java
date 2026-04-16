@@ -28,9 +28,22 @@ public class RoundManager {
             phase=phase+1;
         }
         else {
+            advanceRound();
         phase = 2;
         }
         return phase;
+    }
+
+    public String getRoundDescription()
+    {
+        switch (phase)
+        {
+            case 2: return "Auction Phase";
+            case 3: return "Resource Phase";
+            case 4: return "Building Phase";
+            case 5: return "Bureaucracy";
+        }
+        return "null";
     }
 
     public int advanceRound(){
@@ -83,5 +96,10 @@ public class RoundManager {
     public int getPhase()
     {
         return phase;
+    }
+
+    public int getRoundNum()
+    {
+        return round;
     }
 }

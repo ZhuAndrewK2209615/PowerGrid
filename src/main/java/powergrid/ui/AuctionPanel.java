@@ -607,7 +607,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
             // discard button 
             else if (x >= 1220 && x <= 1520) {
                 auctionWinner.getOwnedPlants().remove(plantToDiscard);
-                GameState.marketManager.getDeck().getDiscardedPlants().add(GameState.auctionManager.getCurrentPlant());
+                GameState.marketManager.getDeck().getDiscardedPlants().add(plantToDiscard);
                 endAuction();
             }
         } 
