@@ -93,4 +93,9 @@ public class Deck {
     {
         return powerPlants.toString();
     }
+
+    public TreeSet<PowerPlant> getDiscardedPlants() 
+    {
+        return discardedPlants;
+    }
 }
