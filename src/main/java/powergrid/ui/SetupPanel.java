@@ -8,12 +8,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import powergrid.core.*;
+import powergrid.utils.*;
 
 public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     private int playerCount;
     private int regionCount;
 
     private boolean choosingPlayers; // first screen
+    private boolean choosingNames;
     private boolean choosingRegions; // second screen
 
     private HashMap<Integer, Rectangle> playerButtons;
@@ -26,6 +28,13 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
 
     private HashMap<String, Rectangle> regionBoxes;
     private PowerGridFrame parent;
+
+    private int currentPlayerIndex;
+    private String currentName = "Type name (max: 8 chars)";
+    private String validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./;-=_+[]{}:\"\\";
+    private HashMap<Color, Boolean> colors;
+    private HashMap<Color, Pair> colorsPos;
+    private Color selectedColor = null;
 
     public SetupPanel(PowerGridFrame parent) {
         try {
@@ -42,9 +51,21 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
 
         playerCount = 0;
         regionCount = 0;
+        currentPlayerIndex = 0;
+
+        colors = new HashMap<>();
+        colors.put(Color.RED, true);
+        colors.put(Color.PINK, true);
+        colors.put(new Color(90, 29, 161), true);
+        colors.put(new Color(186, 186, 0), true);
+        colors.put(new Color(7, 145, 19), true);
+        colors.put(new Color(9, 96, 150), true);
+
+        colorsPos = new HashMap<>();
 
         choosingPlayers = true;
         choosingRegions = false;
+        choosingNames = false;
 
         playerButtons = new HashMap<>();
         playerButtons.put(3, new Rectangle(600, 600, 80, 80));
@@ -77,6 +98,65 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
         } else if (choosingRegions) {
             drawRegionSelectionScreen(g2);
         }
+        else if (choosingNames)
+        {
+            drawNameScreen(g2);
+        }
+    }
+
+    private void drawNameScreen(Graphics2D g)
+    {
+        colorsPos.clear();
+        g.drawImage(ImageLibrary.background2, 0, 0, getWidth(), getHeight(), null);
+        Color myYellow = new Color(255, 250, 191);
+        g.setColor(myYellow); 
+        g.fillRect(getWidth() / 2 - 500, 3, 1000, 200);
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(6));
+        g.drawRect(getWidth() / 2 - 500, 3, 1000, 200);
+        g.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString(GameState.players.get(currentPlayerIndex).getName() + ", choose your name and color", getWidth() / 2 - 350, 110);
+        g.setColor(new Color(237, 236, 229));
+        g.fillRect(getWidth() / 2 - 250, getHeight() / 2, 500, 200);
+        g.setColor(Color.BLACK);
+        g.drawRect(getWidth() / 2 - 250, getHeight() / 2, 500, 200);
+        g.drawLine(getWidth() / 2 - 250, getHeight() / 2 + 100, getWidth() / 2 + 250, getHeight() / 2 + 100);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        g.drawString(currentName, getWidth() / 2 - currentName.length() * 8, getHeight() / 2 + 60);
+        int x = getWidth() / 2 - 200;
+        int y = getHeight() / 2 + 130;
+        for(Color c: colors.keySet())
+        {
+            g.setColor(c);
+            g.fillRect(x, y, 50, 50);
+            g.setColor(Color.BLACK);
+            if (selectedColor != null && selectedColor.equals(c))
+                g.setColor(Color.GREEN);
+            g.setStroke(new BasicStroke(4));
+            g.drawRect(x, y, 50, 50);
+            if (!colors.get(c))
+            {
+                g.drawLine(x, y, x + 50, y + 50);
+                g.drawLine(x + 50, y, x, y + 50);
+            }
+            else
+            {
+                colorsPos.put(c, new Pair(x, y));
+            }
+            x += 70;
+        }
+        if (selectedColor != null && !currentName.equals("Type name (max: 8 chars)"))
+        {
+            g.setColor(new Color(0, 191, 99));
+        }
+        else
+        {
+            g.setColor(new Color(185, 181, 171));
+        }
+        g.fillRect(getWidth() / 2 - 100, getHeight() - 300, 200, 50);
+        g.setColor(Color.BLACK);
+        g.drawRect(getWidth() / 2 - 100, getHeight() - 300, 200, 50);
+        g.drawString("Finish", getWidth() / 2 - 50, getHeight() - 265);
     }
 
     private void drawPlayerSelectionScreen(Graphics2D g) {
@@ -270,8 +350,36 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
         } else if (choosingRegions) {
             handleRegionScreenClick(x, y);
         }
+        else if (choosingNames)
+            handleNameScreenClick(x, y);
 
         repaint();
+    }
+
+    private void handleNameScreenClick(int x, int y)
+    {
+        for(Color c: colorsPos.keySet())
+        {
+            Pair pos = colorsPos.get(c);
+            if (x > pos.getX() && x < pos.getX() + 50 && y > pos.getY() && y < pos.getY() + 50)
+            {
+                selectedColor = c;
+            }
+        }//g.fillRect(getWidth() / 2 - 100, getHeight() - 300, 200, 50);
+        if (x > getWidth() / 2 - 100 && x < getWidth() / 2 + 100 && y > getHeight() - 300 && y < getHeight() - 250 && selectedColor != null && !currentName.equals("Type name (max: 8 chars)"))
+        {
+            GameState.players.get(currentPlayerIndex).setColor(selectedColor);
+            GameState.players.get(currentPlayerIndex).setName(currentName);
+            currentPlayerIndex++;
+            currentName = "Type name (max: 8 chars)";
+            colors.put(selectedColor, false);
+            selectedColor = null;
+            if (currentPlayerIndex == GameState.players.size())
+            {
+                choosingNames = false;
+                choosingRegions = true;
+            }
+        }
     }
 
     private void handlePlayerScreenClick(int x, int y) {
@@ -285,7 +393,8 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
         if (startButton.contains(x, y) && playerCount >= 3 && playerCount <= 6) {
             GameState.initializePlayers(playerCount);
             choosingPlayers = false;
-            choosingRegions = true;
+            choosingRegions = false;
+            choosingNames = true;
         }
     }
 
@@ -351,6 +460,15 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
                 repaint();
             }
         }
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && choosingNames && !currentName.equals("Type name (max: 8 chars)"))
+        {
+            currentName = currentName.substring(0, currentName.length() - 1);
+            if (currentName.length() == 0)
+            {
+                currentName = "Type name (max: 8 chars)";
+            }
+            repaint();
+        }
     }
 
     @Override
@@ -366,7 +484,19 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
     public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (choosingNames && validChars.indexOf(c) > -1)
+        {
+            if (currentName.equals("Type name (max: 8 chars)"))
+            {
+                currentName = "";
+            }
+            if (currentName.length() < 8)
+                currentName += c;
+        }
+        repaint();
+    }
 
     @Override
     public void keyReleased(KeyEvent e) {}
