@@ -15,13 +15,13 @@ public class ResourceMarket {
         //initialize currentStock
         currentStock.put(ResourceType.COAL, 24);
         currentStock.put(ResourceType.OIL, 18);
-        currentStock.put(ResourceType.GARBAGE, 9);
+        currentStock.put(ResourceType.GARBAGE, 6);
         currentStock.put(ResourceType.URANIUM, 2);
 
         //initialize availableTokens
         availableTokens.put(ResourceType.COAL, 0);
         availableTokens.put(ResourceType.OIL, 6);
-        availableTokens.put(ResourceType.GARBAGE, 15);
+        availableTokens.put(ResourceType.GARBAGE, 18);
         availableTokens.put(ResourceType.URANIUM, 10);
     }
 
