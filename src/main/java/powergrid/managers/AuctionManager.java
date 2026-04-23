@@ -1,8 +1,7 @@
 package powergrid.managers;
 import java.util.ArrayList;
-
-import powergrid.utils.PowerPlant;
 import powergrid.core.*;
+import powergrid.utils.PowerPlant;
 
 // all methods are public, no helper methods used specific to this class
 
@@ -55,7 +54,7 @@ public class AuctionManager {
       pendingBid = currentBid + 1;
       for(Player p: activePlayers)
       {
-        if (p.getElektro() <= currentBid)
+        if (p.getElektro() <= currentBid && !(p == GameState.activePlayer))
         {
           p.setPassedBid(true);
         }
