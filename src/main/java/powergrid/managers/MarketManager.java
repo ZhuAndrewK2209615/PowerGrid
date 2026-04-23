@@ -1,9 +1,8 @@
 package powergrid.managers;
 import java.util.ArrayList;
 import java.util.Collections;
-import powergrid.utils.PowerPlant;
-import java.io.*;
 import powergrid.core.*;
+import powergrid.utils.PowerPlant;
 
 // one private specifc to class helper method: STEP 3 HAS NOT BEEN INITIATED
 
@@ -123,12 +122,20 @@ public class MarketManager {
 
   public void discardLowestPlant()
   {
-    plantDeck.getDiscardedPlants().add(removePlant(currentMarket.get(0)));
-    refillMarket();
+    if (!plantDeck.isEmpty())
+    {
+      plantDeck.getDiscardedPlants().add(removePlant(currentMarket.get(0)));
+      refillMarket();
+    }
+    
   }
 
   public boolean containsStep3()
   {
+    if (futureMarket.isEmpty())
+    {
+      return false;
+    }
     if (futureMarket.get(futureMarket.size() - 1).getPlantNumber() == 999)
       return true;
     return false;
