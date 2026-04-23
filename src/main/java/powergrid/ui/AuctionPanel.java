@@ -498,7 +498,7 @@ public class AuctionPanel extends JPanel implements MouseListener, KeyListener{
         for(PowerPlant p: currentMarketPositions.keySet())
         {
             Pair pos = currentMarketPositions.get(p);
-            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && p.getPlantNumber() <= GameState.activePlayer.getElektro() && !infoPreview.isPreviewing)
+            if (x > pos.getX() && x < pos.getX() + 250 && y > pos.getY() && y < pos.getY() + 250 && p.getPlantNumber() <= GameState.activePlayer.getElektro() && !infoPreview.isPreviewing && !auctionStarted)
             {
                 GameState.auctionManager.startAuction(p);
                 auctionStarted = true;
