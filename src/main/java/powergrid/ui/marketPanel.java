@@ -7,9 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
-import powergrid.utils.ResourceType;
 import powergrid.PowerGridFrame;
 import powergrid.core.*;
+import powergrid.utils.ResourceType;
 
 public class marketPanel extends JPanel implements MouseInputListener{
 
@@ -173,7 +173,10 @@ public class marketPanel extends JPanel implements MouseInputListener{
             g.drawString(s, 1650, 860);
 
             g.drawRect(920+360, 960, 200, 70);
-            g.setColor(new Color(64,218,53));
+            if (!playerMenu.isBuying)
+                g.setColor(new Color(64,218,53));
+            else
+                g.setColor(new Color(255,250,191));
             g.fillRect(920+362, 962, 196, 66);
 
             
@@ -216,7 +219,7 @@ public class marketPanel extends JPanel implements MouseInputListener{
             }
         }
 
-        if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70)){
+        if((x>=920+360 && x <= 920+360+200) && (y>=960 && y<= 960+70) && !playerMenu.isBuying){
             Player next = GameState.roundManager.getNextPlayer();
             if (next != null)
             {

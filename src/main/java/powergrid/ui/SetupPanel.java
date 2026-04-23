@@ -1,12 +1,12 @@
 package powergrid.ui;
 
-import powergrid.PowerGridFrame;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import powergrid.PowerGridFrame;
 import powergrid.core.*;
 import powergrid.utils.*;
 
@@ -280,9 +280,16 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Serif", Font.BOLD, 48));
-        g.drawString("Choose " + regionCount + " adjacent regions on", 1050, 80);
-        g.drawString("the map for playing the game", 1050, 150);
-
+        if (currentPlayerIndex < GameState.players.size())
+        {
+            g.drawString(GameState.players.get(currentPlayerIndex).getName() + ", choose a region on", 1050, 80);
+            g.drawString("the map for playing the game", 1050, 150);
+        }
+        else
+        {
+            g.drawString("The regions have been selected", 1050, 80);
+            g.drawString("(Click finish to proceed)", 1050, 150);
+        }
         String[] regions = {"Red", "Blue", "Yellow", "Teal", "Brown", "Purple"};
 
         g.setFont(new Font("Serif", Font.PLAIN, 24));
@@ -378,6 +385,7 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
             {
                 choosingNames = false;
                 choosingRegions = true;
+                currentPlayerIndex = 0;
             }
         }
     }
@@ -403,15 +411,17 @@ public class SetupPanel extends JPanel implements MouseListener, KeyListener {
             Rectangle box = regionBoxes.get(region);
             if (x > box.x - 10 && x < (box.x - 10) + ((box.width+10)/2*3) && y > box.y && y < (box.y) + ((box.height+10)/2*3)) {
                 if (GameState.mapGraph.getMapRegions().contains(region)) {
-                    GameState.mapGraph.removeRegion(region);
+                    return;
                 } else {
                     if (GameState.mapGraph.getMapRegions().size() < regionCount) {
                         boolean added = GameState.mapGraph.addRegion(region);
+                        currentPlayerIndex++;
                         if (!added) {
                             JOptionPane.showMessageDialog(this,
                                     "That region is not adjacent to the current selection.",
                                     "Invalid Region Choice",
                                     JOptionPane.WARNING_MESSAGE);
+                            currentPlayerIndex--;
                         }
                     }
                 }

@@ -225,6 +225,8 @@ public class MapPanel extends JPanel implements MouseListener{
             {
                 GameState.activePlayer = next;
                 playerMenu.viewedPlayer = GameState.activePlayer;
+                selectedCity = null;
+                shortestPath = null;
             }
             else
             {
